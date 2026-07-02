@@ -1,8 +1,26 @@
-# S.STUDIO Agent Office 🏢
+# 🏢 S.STUDIO Agent Office
 
-Pixel art virtual office for S.STUDIO AI agents — Hermes, OpenClaw, and ChatGPT.
+Pixel art virtual office for S.STUDIO's 12-person AI software studio.
 
-Watch your AI agents work in real-time from your browser.
+```
+         👩🏻 Sammi (Founder & CEO)
+            │
+    ┌───────┼─────────┐
+    │       │         │
+  🧠 CTO  📋 PM    🎨 Design
+  📋 📋   💻 🏗 🧪  🎨
+```
+
+## Active Agents
+
+| Agent | Role | Team | Color |
+|-------|------|------|-------|
+| 📋 Hermes | Product Manager | Product | Teal |
+| 💻 OpenClaw | Senior Engineer | Engineering | Green |
+| 🧠 ChatGPT | CTO / QA / Critic | Executive | Purple |
+| 🏗 Codex | Staff Engineer | Engineering | Orange |
+| 🎨 Claude | Design Director | Design | Pink |
+| 🔍 Gemini | Research Analyst | Research | Gold |
 
 ## Quick Start
 
@@ -13,9 +31,21 @@ npm start
 
 Open http://localhost:3100
 
-## API
+## Project Structure
 
-Update agent states programmatically:
+```
+📁 s-studio-agents-office
+├── server.js            ← Express server + REST API
+├── agent-client.js      ← CLI tool for agents to push state
+├── ORGANIZATION.md      ← Full company handbook
+├── public/
+│   ├── index.html       ← Pixel art office canvas
+│   └── sprites/         ← Character sprite sheets
+├── vercel.json          ← Vercel deployment config
+└── package.json
+```
+
+## API
 
 ```sh
 # Single agent
@@ -23,7 +53,7 @@ curl -X POST http://localhost:3100/api/agents/hermes/status \
   -H "Content-Type: application/json" \
   -d '{"status":"typing"}'
 
-# Batch update
+# Batch update (all at once)
 curl -X POST http://localhost:3100/api/agents/batch \
   -H "Content-Type: application/json" \
   -d '{
@@ -36,26 +66,44 @@ curl -X POST http://localhost:3100/api/agents/batch \
 curl http://localhost:3100/api/agents
 ```
 
+### Agent Client CLI
+
+```sh
+# From any agent's context:
+node agent-client.js openclaw typing
+node agent-client.js batch '{"hermes":{"status":"reading"},"openclaw":{"status":"typing"}}'
+```
+
 ### Status Values
 
-- `idle` — Standing by
-- `typing` — Writing code
-- `reading` — Reading files
-- `reviewing` — Reviewing code
-- `waiting` — Waiting for input
-- `done` — Task complete
+| Status | Display |
+|--------|--------|
+| `idle` | Standing by |
+| `typing` | Writing code... |
+| `reading` | Reading files... |
+| `reviewing` | Reviewing... |
+| `waiting` | Waiting for input |
+| `running` | Running... |
+| `done` | Done ✓ |
 
-## Characters
+## Orchestration Notes
 
-| Agent | Role | Color |
-|-------|------|-------|
-| Hermes 📋 | Project Manager | Teal |
-| OpenClaw 💻 | Software Engineer | Green |
-| ChatGPT 🧠 | CTO + QA | Purple |
+- **Claude** and **Gemini** are specialists — only use for design/research tasks
+- **Codex** handles infrastructure — called as-needed
+- **ChatGPT** wears 3 hats (CTO, QA, Product Critic) — always active
+- **Hermes** runs sprint planning and coordination
+- **OpenClaw** is the primary engineer for feature work
+
+## Deploy to Vercel
+
+1. Go to [vercel.com](https://vercel.com)
+2. Import `s-studio-creator/s-studio-agents-office`
+3. Framework preset: **Other**
+4. Deploy 🚀
 
 ## Tech
 
-- Express.js
-- Canvas 2D
-- Pixel art sprites based on Pixel Agents
-- MIT License
+- **Backend:** Express.js
+- **Frontend:** Canvas 2D (no React, no build step)
+- **Sprites:** Custom pixel art (based on Pixel Agents by OpenClaw)
+- **Deploy:** Vercel-ready

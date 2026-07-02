@@ -17,64 +17,64 @@
     padding: 20px;
   }
   h1 {
-    font-size: 20px;
+    font-size: 18px;
     color: #7c3aed;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     letter-spacing: 2px;
   }
   .subtitle {
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
   #office-canvas {
     border: 2px solid #333;
     border-radius: 8px;
     image-rendering: pixelated;
     box-shadow: 0 0 30px rgba(124, 58, 237, 0.2);
+    max-width: 100%;
   }
   .controls {
-    margin-top: 20px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    max-width: 800px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 720px;
+    width: 100%;
   }
   .agent-panel {
     background: #16213e;
     border: 1px solid #333;
     border-radius: 8px;
-    padding: 12px;
-    min-width: 200px;
+    padding: 10px;
   }
   .agent-panel h3 {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 13px;
+    margin-bottom: 2px;
   }
   .agent-panel .role {
-    font-size: 11px;
+    font-size: 10px;
     color: #888;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .agent-panel .status-text {
-    font-size: 12px;
+    font-size: 11px;
     color: #4ade80;
-    margin-bottom: 8px;
-    min-height: 18px;
+    margin-bottom: 6px;
+    min-height: 16px;
   }
   .status-btns {
     display: flex;
-    gap: 4px;
+    gap: 3px;
     flex-wrap: wrap;
   }
   .status-btns button {
     background: #0f3460;
     border: 1px solid #333;
     color: #ccc;
-    padding: 4px 8px;
-    font-size: 11px;
-    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 10px;
+    border-radius: 3px;
     cursor: pointer;
     font-family: 'Courier New', monospace;
   }
@@ -87,42 +87,46 @@
     border-color: #7c3aed;
     color: #fff;
   }
-  .hermes-color { color: #00BCD4; }
-  .openclaw-color { color: #4CAF50; }
-  .chatgpt-color { color: #9C27B0; }
-  .footer {
-    margin-top: 20px;
-    font-size: 11px;
-    color: #444;
-  }
   .api-section {
-    margin-top: 16px;
+    margin-top: 14px;
     background: #111;
     border: 1px solid #222;
     border-radius: 8px;
-    padding: 12px;
-    max-width: 800px;
+    padding: 10px;
+    max-width: 720px;
     width: 100%;
   }
   .api-section h3 {
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .api-section code {
-    font-size: 11px;
+    font-size: 10px;
     color: #888;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+  }
+  .footer {
+    margin-top: 14px;
+    font-size: 10px;
+    color: #444;
+  }
+  .team-badge {
+    display: inline-block;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 4px;
   }
 </style>
 </head>
 <body>
 
 <h1>🏢 S.STUDIO AGENT OFFICE</h1>
-<div class="subtitle">Watch Hermes, OpenClaw, and ChatGPT work in real-time</div>
+<div class="subtitle">👩🏻 Sammi + 6 AI Agents — 12-Person Startup Mode</div>
 
-<canvas id="office-canvas" width="640" height="400"></canvas>
+<canvas id="office-canvas" width="800" height="420"></canvas>
 
 <div class="controls" id="controls"></div>
 
@@ -130,18 +134,31 @@
   <h3>🔌 API — Update Agent State</h3>
   <code>POST /api/agents/:id/status  { "status": "typing" }</code>
   <code>POST /api/agents/batch  { "hermes": { "status": "reading" } }</code>
-  <code>GET /api/agents — View all agent states</code>
+  <code>GET /api/agents — View all states</code>
 </div>
 
-<div class="footer">S.STUDIO — AI Software Studio 🦀</div>
+<div class="footer">S.STUDIO — NextBite AI Software Studio 🦀</div>
 
 <script>
-// ── Agent Colors ──────────────────────────────────────────────
+// ── Agent Config ──────────────────────────────────────────────
 
-const AGENT_COLORS = {
-  hermes:   { primary: '#00BCD4', secondary: '#00838F', name: 'Hermes', role: 'PM', emoji: '📋' },
-  openclaw: { primary: '#4CAF50', secondary: '#2E7D32', name: 'OpenClaw', role: 'Engineer', emoji: '💻' },
-  chatgpt:  { primary: '#9C27B0', secondary: '#6A1B9A', name: 'ChatGPT', role: 'CTO', emoji: '🧠' },
+const AGENT_CONFIG = [
+  { id: 'hermes',   name: 'Hermes',   role: 'Product Manager',         team: 'Product',    primary: '#00BCD4', secondary: '#00838F', emoji: '📋',  desk: 0, colorHash: '#00BCD4' },
+  { id: 'openclaw', name: 'OpenClaw', role: 'Senior Engineer',         team: 'Engineering', primary: '#4CAF50', secondary: '#2E7D32', emoji: '💻',  desk: 1, colorHash: '#4CAF50' },
+  { id: 'chatgpt',  name: 'ChatGPT',  role: 'CTO / QA / Critic',      team: 'Executive',   primary: '#9C27B0', secondary: '#6A1B9A', emoji: '🧠',  desk: 2, colorHash: '#9C27B0' },
+  { id: 'codex',    name: 'Codex',    role: 'Staff Engineer',          team: 'Engineering', primary: '#FF6B35', secondary: '#BF360C', emoji: '🏗',  desk: 3, colorHash: '#FF6B35' },
+  { id: 'claude',   name: 'Claude',   role: 'Design Director',         team: 'Design',      primary: '#E91E63', secondary: '#880E4F', emoji: '🎨',  desk: 4, colorHash: '#E91E63' },
+  { id: 'gemini',   name: 'Gemini',   role: 'Research Analyst',        team: 'Research',    primary: '#FFD700', secondary: '#F57F17', emoji: '🔍',  desk: 5, colorHash: '#FFD700' },
+];
+
+const STATUS_MAP = {
+  idle: 'Standing by',
+  typing: 'Writing code...',
+  reading: 'Reading files...',
+  reviewing: 'Reviewing...',
+  waiting: 'Waiting for input',
+  running: 'Running...',
+  done: 'Done ✓',
 };
 
 // ── Load Character Sprites ──────────────────────────────────
@@ -150,10 +167,11 @@ const charImages = {};
 const CHAR_FRAME_W = 16;
 const CHAR_FRAME_H = 32;
 const FRAMES_PER_ROW = 7;
-const DIRECTIONS = 3; // down, up, right
 
 async function loadSprites() {
-  const promises = ['hermes', 'openclaw', 'chatgpt'].map(async (name, idx) => {
+  // Only hermes, openclaw, chatgpt have real sprites (indices 0,1,2)
+  const spriteMap = { hermes: 0, openclaw: 1, chatgpt: 2 };
+  const promises = Object.entries(spriteMap).map(async ([name, idx]) => {
     const img = new Image();
     img.src = `sprites/char_${idx}.png`;
     await new Promise((resolve, reject) => {
@@ -165,241 +183,276 @@ async function loadSprites() {
   await Promise.all(promises);
 }
 
-// ── Canvas Rendering ────────────────────────────────────────
+// ── Canvas ──────────────────────────────────────────────────
 
 const canvas = document.getElementById('office-canvas');
 const ctx = canvas.getContext('2d');
+const TILE = 16;
+const COLS = 50;
+const ROWS = 26;
 
 // Office layout
-const TILE = 16;
-const COLS = 40;
-const ROWS = 25;
-const TILE_TYPES = {
-  FLOOR: 0,
-  WALL: 1,
-  DESK: 2,
-  DESK_TOP: 3,
-  CHAIR: 4,
-  PC: 5,
-  PLANT: 6,
-  BOARD: 7,
-};
+const T = { FLOOR: 0, WALL: 1, DESK: 2, CHAIR: 3, PC: 4, BOARD: 5, PLANT: 6 };
 
-// Build a simple office map
-const map = Array.from({ length: ROWS }, () => Array(COLS).fill(TILE_TYPES.FLOOR));
+const map = Array.from({ length: ROWS }, () => Array(COLS).fill(T.FLOOR));
 
-// Walls (outer perimeter)
-for (let c = 0; c < COLS; c++) {
-  map[0][c] = TILE_TYPES.WALL;
-  map[ROWS-1][c] = TILE_TYPES.WALL;
-}
-for (let r = 0; r < ROWS; r++) {
-  map[r][0] = TILE_TYPES.WALL;
-  map[r][COLS-1] = TILE_TYPES.WALL;
-}
+// Walls
+for (let c = 0; c < COLS; c++) { map[0][c] = T.WALL; map[ROWS-1][c] = T.WALL; }
+for (let r = 0; r < ROWS; r++) { map[r][0] = T.WALL; map[r][COLS-1] = T.WALL; }
 
-// Desk positions (col, row): 3 desks side by side
+// 6 desks in a U-shape layout
 const DESK_POSITIONS = [
-  { col: 10, row: 14, agent: 'hermes' },
-  { col: 20, row: 14, agent: 'openclaw' },
-  { col: 30, row: 14, agent: 'chatgpt' },
+  { col: 6,  row: 16, agent: 'hermes' },
+  { col: 14, row: 16, agent: 'openclaw' },
+  { col: 22, row: 16, agent: 'chatgpt' },
+  { col: 30, row: 16, agent: 'codex' },
+  { col: 38, row: 16, agent: 'claude' },
+  { col: 38, row: 6,  agent: 'gemini' },
 ];
 
 // Place desks
 for (const desk of DESK_POSITIONS) {
   const { col, row } = desk;
-  map[row][col] = TILE_TYPES.DESK;
-  map[row][col+1] = TILE_TYPES.DESK_TOP;
-  // Chair behind desk
-  map[row+2][col] = TILE_TYPES.CHAIR;
-  map[row+2][col+1] = TILE_TYPES.CHAIR;
-  // PC on desk
-  map[row][col+1] = TILE_TYPES.PC;
+  map[row][col] = T.DESK;
+  map[row][col+1] = T.DESK;
+  map[row+1][col] = T.CHAIR;
+  map[row+1][col+1] = T.CHAIR;
+  map[row-1][col] = T.PC;
 }
 
-// Whiteboard at top
-for (let c = 17; c < 23; c++) {
-  map[3][c] = TILE_TYPES.BOARD;
-}
+// Whiteboard
+for (let c = 22; c < 28; c++) map[3][c] = T.BOARD;
 
 // Plants
-map[8][5] = TILE_TYPES.PLANT;
-map[8][34] = TILE_TYPES.PLANT;
+for (let c = 3; c <= 4; c++) { map[5][c] = T.PLANT; map[5][COLS-1-c] = T.PLANT; }
 
 // ── Agent State ──────────────────────────────────────────────
 
 const agents = {};
-for (const [id, config] of Object.entries(AGENT_COLORS)) {
-  agents[id] = {
-    ...config,
-    id,
-    status: 'idle',
-    statusText: 'Standing by',
-    frame: 0,
-    frameTimer: 0,
-    animFrame: 0,
-  };
+for (const config of AGENT_CONFIG) {
+  agents[config.id] = { ...config, status: 'idle', statusText: 'Standing by', frame: 0, animFrame: 0 };
 }
 
-let animTime = 0;
-const ANIM_SPEED = 0.15; // seconds per frame
-
-function getDeskPosition(agentId) {
-  const desk = DESK_POSITIONS.find(d => d.agent === agentId);
-  if (!desk) return { x: 0, y: 0 };
-  return { x: desk.col * TILE + TILE * 1.5, y: desk.row * TILE + TILE * 0.5 };
-}
-
-// ── Drawing Functions ───────────────────────────────────────
+// ── Drawing ──────────────────────────────────────────────────
 
 function drawTile(r, c, type) {
-  const x = c * TILE;
-  const y = r * TILE;
-  
+  const x = c * TILE, y = r * TILE;
   switch(type) {
-    case TILE_TYPES.FLOOR:
+    case T.FLOOR:
       ctx.fillStyle = (r + c) % 2 === 0 ? '#2a2a40' : '#222238';
       ctx.fillRect(x, y, TILE, TILE);
+      // Subtle grid lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+      ctx.strokeRect(x, y, TILE, TILE);
       break;
-    case TILE_TYPES.WALL:
+    case T.WALL:
       ctx.fillStyle = '#1a1a2e';
       ctx.fillRect(x, y, TILE, TILE);
       ctx.strokeStyle = '#333355';
       ctx.strokeRect(x, y, TILE, TILE);
       break;
-    case TILE_TYPES.DESK:
+    case T.DESK:
       ctx.fillStyle = '#3e2723';
       ctx.fillRect(x, y, TILE*2, TILE);
-      // wood grain
       ctx.fillStyle = '#4e342e';
-      ctx.fillRect(x+1, y+2, TILE*2-2, 3);
-      ctx.fillRect(x+1, y+9, TILE*2-2, 2);
+      ctx.fillRect(x+2, y+3, TILE*2-4, 2);
+      ctx.fillRect(x+2, y+8, TILE*2-4, 2);
       break;
-    case TILE_TYPES.DESK_TOP:
-      ctx.fillStyle = '#3e2723';
-      ctx.fillRect(x, y, TILE, TILE);
-      ctx.fillStyle = '#5d4037';
-      ctx.fillRect(x+1, y+1, TILE-2, 2);
-      break;
-    case TILE_TYPES.CHAIR:
+    case T.CHAIR:
       ctx.fillStyle = '#37474f';
       ctx.fillRect(x, y, TILE*2, TILE);
       ctx.fillStyle = '#455a64';
-      ctx.fillRect(x+2, y+2, TILE*2-4, TILE-4);
+      ctx.fillRect(x+3, y+3, TILE*2-6, TILE-6);
+      break;
+    case T.PC:
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(x+12, y-6, 14, 12); // monitor
+      ctx.fillStyle = '#0a0a1a';
+      ctx.fillRect(x+14, y-4, 10, 8); // screen
+      ctx.fillStyle = 'rgba(124, 58, 237, 0.08)';
+      ctx.fillRect(x+14, y-4, 10, 8); // glow
+      ctx.fillStyle = '#333';
+      ctx.fillRect(x+17, y+6, 4, 4); // stand
+      ctx.fillRect(x+15, y+10, 8, 2); // base
+      break;
+    case T.BOARD:
+      ctx.fillStyle = '#263238';
+      ctx.fillRect(x, y, 6*TILE, TILE*3);
+      ctx.fillStyle = '#37474f';
+      ctx.fillRect(x+2, y+2, 6*TILE-4, TILE*3-4);
+      break;
+    case T.PLANT:
+      ctx.fillStyle = '#2e7d32';
+      ctx.fillRect(x+4, y+4, 8, 8); // leaves
+      ctx.fillRect(x+2, y+8, 12, 2);
+      ctx.fillStyle = '#1b5e20';
+      ctx.fillRect(x+6, y+6, 4, 4);
+      ctx.fillStyle = '#4a2c2a';
+      ctx.fillRect(x+4, y+10, 8, 6); // pot
       break;
   }
 }
 
-function drawPC(col, row) {
-  // Monitor
-  ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(col * TILE + 14, row * TILE - 4, 12, 10);
-  ctx.fillStyle = '#0a0a1a';
-  ctx.fillRect(col * TILE + 15, row * TILE - 3, 10, 8);
-  // Screen glow
-  ctx.fillStyle = 'rgba(124, 58, 237, 0.1)';
-  ctx.fillRect(col * TILE + 15, row * TILE - 3, 10, 8);
-  // Stand
-  ctx.fillStyle = '#333';
-  ctx.fillRect(col * TILE + 18, row * TILE + 7, 4, 4);
-  // Base
-  ctx.fillRect(col * TILE + 15, row * TILE + 11, 10, 2);
-}
-
-function drawWhiteboard(col, row, width) {
-  ctx.fillStyle = '#263238';
-  ctx.fillRect(col * TILE, row * TILE, width * TILE, TILE * 3);
-  ctx.fillStyle = '#37474f';
-  ctx.fillRect(col * TILE + 2, row * TILE + 2, width * TILE - 4, TILE * 3 - 4);
-  
-  // Sprint info text
-  ctx.fillStyle = '#78909c';
+function drawWhiteboard() {
+  const x = 22*TILE, y = 3*TILE;
   ctx.font = '8px monospace';
-  ctx.fillText('SPRINT 000', col * TILE + 8, row * TILE + 14);
+  
+  ctx.fillStyle = '#78909c';
+  ctx.fillText('SPRINT 001', x + 8, y + 14);
+  
   ctx.fillStyle = '#4CAF50';
-  ctx.fillText('AI OS', col * TILE + 8, row * TILE + 26);
+  ctx.fillText('S.STUDIO AI OS', x + 8, y + 26);
+  
   ctx.fillStyle = '#546e7a';
   ctx.font = '6px monospace';
-  ctx.fillText('DONE', col * TILE + 8, row * TILE + 36);
-  ctx.fillText('IN PROGRESS', col * TILE + 8, row * TILE + 44);
+  ctx.fillText('▸ AI Agents Office', x + 8, y + 36);
+  ctx.fillText('▸ NextBite MVP', x + 8, y + 44);
+  
+  ctx.fillStyle = '#f44336';
+  ctx.fillText('▸ Axis Skin Launch', x + 54, y + 36);
+  
+  ctx.fillStyle = '#FF9800';
+  ctx.fillText('▸ 🐶 Dog Blood S1', x + 54, y + 44);
 }
 
-function drawSprite(agentId, x, y) {
-  const img = charImages[agentId];
-  if (!img) return;
+// ── Pixel Character Drawing ──────────────────────────────────
+
+function drawAgentSprite(x, y, agent, frame) {
+  const { id, primary, secondary } = agent;
   
-  const agent = agents[agentId];
-  const frame = agent.animFrame;
-  
-  // Use direction=0 (down) for sitting at desk
-  const dir = 0;
-  const sx = (frame % FRAMES_PER_ROW) * CHAR_FRAME_W;
-  const sy = dir * CHAR_FRAME_H;
-  
-  // Draw character centered on tile
-  const drawX = x - CHAR_FRAME_W / 2;
-  const drawY = y - CHAR_FRAME_H;
-  
-  // Draw sprite
-  ctx.drawImage(img, sx, sy, CHAR_FRAME_W, CHAR_FRAME_H, drawX, drawY, CHAR_FRAME_W * 2, CHAR_FRAME_H * 2);
+  // Use real sprite if available
+  if (charImages[id]) {
+    const img = charImages[id];
+    const sx = (frame % FRAMES_PER_ROW) * CHAR_FRAME_W;
+    const sy = 0; // direction down
+    const scale = 2;
+    ctx.drawImage(img, sx, sy, CHAR_FRAME_W, CHAR_FRAME_H,
+                  x - CHAR_FRAME_W/2, y - CHAR_FRAME_H, CHAR_FRAME_W * scale, CHAR_FRAME_H * scale);
+  } else {
+    // Draw generated pixel character
+    const size = 14;
+    const px = x - size;
+    const py = y - size * 2;
+    const bodyFrames = [
+      // Simple walking animation
+      [0,1,2,1],
+      [1,0,1,2],
+    ];
+    const bodyFrame = bodyFrames[frame % 2];
+    const bf = bodyFrame[0];
+    
+    // Head
+    ctx.fillStyle = '#f5d0a9';
+    ctx.fillRect(px+4, py, size-8, 5);
+    ctx.fillRect(px+3, py+1, size-6, 4);
+    
+    // Hair/hat
+    ctx.fillStyle = secondary;
+    ctx.fillRect(px+3, py-1, size-6, 3);
+    
+    // Body
+    ctx.fillStyle = primary;
+    ctx.fillRect(px+2, py+5, size-4, size-4);
+    
+    // Arms
+    ctx.fillStyle = '#f5d0a9';
+    const armOffset = bf === 0 ? 0 : (bf === 1 ? 1 : -1);
+    ctx.fillRect(px-1, py+6, 3, 6);
+    ctx.fillRect(px+size-2, py+6, 3, 6);
+    
+    // Legs
+    ctx.fillStyle = '#2c2c3a';
+    ctx.fillRect(px+3, py+size+1, 3, 3);
+    ctx.fillRect(px+8, py+size+1, 3, 3);
+    
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(px+5, py+2, 2, 1);
+    ctx.fillRect(px+9, py+2, 2, 1);
+  }
   
   // Name tag
-  ctx.fillStyle = AGENT_COLORS[agentId].primary;
+  ctx.fillStyle = agent.primary;
   ctx.font = 'bold 10px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(agent.name, x, y + 8);
+  ctx.fillText(agent.name, x, y + 10);
   
-  // Status indicator
-  ctx.fillStyle = agent.status === 'idle' ? '#666' : 
-                  agent.status === 'typing' ? '#4CAF50' :
-                  agent.status === 'reading' ? '#2196F3' : '#FF9800';
+  // Role label
+  ctx.fillStyle = '#666';
+  ctx.font = '7px monospace';
+  ctx.fillText(agent.role, x, y + 22);
+  
+  // Team badge
+  ctx.fillStyle = '#333';
+  ctx.font = '6px monospace';
+  ctx.fillText(agent.team, x, y + 30);
+  
+  // Status indicator dot
+  const dotColor = agent.status === 'idle' ? '#555' :
+                   agent.status === 'typing' ? '#4CAF50' :
+                   agent.status === 'reading' ? '#2196F3' :
+                   agent.status === 'reviewing' ? '#FF9800' :
+                   agent.status === 'running' ? '#FF5722' : '#4CAF50';
+  ctx.fillStyle = dotColor;
   ctx.beginPath();
-  ctx.arc(x + 16, y - 20, 3, 0, Math.PI * 2);
+  ctx.arc(x + 18, y - 20, 3, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 1;
+  ctx.stroke();
   
   // Status text
   ctx.fillStyle = '#aaa';
-  ctx.font = '8px monospace';
-  ctx.fillText(agent.statusText, x, y + 22);
+  ctx.font = '7px monospace';
+  ctx.fillText(agent.statusText, x, y + 40);
 }
 
-let frameCount = 0;
+// ── Render Loop ──────────────────────────────────────────────
+
+let globalFrame = 0;
 
 function render() {
-  animTime += 1/60;
-  frameCount++;
+  globalFrame++;
   
-  // Clear
   ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
-  // Draw map tiles
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
+  // Draw map
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++)
       drawTile(r, c, map[r][c]);
-    }
-  }
   
   // Draw whiteboard
-  drawWhiteboard(17, 3, 6);
+  drawWhiteboard();
   
-  // Draw PCs on desks
-  for (const desk of DESK_POSITIONS) {
-    drawPC(desk.col, desk.row);
-  }
-  
-  // Draw agents at their desks
+  // Draw agents
   for (const desk of DESK_POSITIONS) {
     const x = desk.col * TILE + TILE;
     const y = desk.row * TILE + 4;
-    drawSprite(desk.agent, x, y);
+    const agent = agents[desk.agent];
+    const animFrame = Math.floor(globalFrame / 5) % FRAMES_PER_ROW;
+    drawAgentSprite(x, y, agent, animFrame);
   }
   
-  // Room label
+  // Draw Sammi's CEO desk
+  const ceoX = 42 * TILE + TILE;
+  const ceoY = 4 * TILE;
+  ctx.fillStyle = '#7c3aed';
+  ctx.font = 'bold 12px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('👩🏻 Sammi', ceoX, ceoY + TILE*2);
   ctx.fillStyle = '#555';
   ctx.font = '8px monospace';
+  ctx.fillText('Founder & CEO', ceoX, ceoY + TILE*2 + 12);
+  // CEO desk glow
+  ctx.fillStyle = 'rgba(124, 58, 237, 0.05)';
+  ctx.fillRect(41*TILE, 3*TILE, 4*TILE, 2*TILE);
+  
+  // Floor label
+  ctx.fillStyle = '#444';
+  ctx.font = '7px monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('E N G I N E E R I N G   F L O O R', canvas.width/2, canvas.height - 10);
+  ctx.fillText('🏢 S.STUDIO AI Software Studio · Engineering Floor · Sprint 001', canvas.width/2, canvas.height - 8);
   
   requestAnimationFrame(render);
 }
@@ -408,16 +461,9 @@ function render() {
 
 function createControls() {
   const container = document.getElementById('controls');
-  const statuses = [
-    { status: 'idle', label: 'Idle' },
-    { status: 'typing', label: '💻 Typing' },
-    { status: 'reading', label: '📖 Reading' },
-    { status: 'reviewing', label: '🔍 Reviewing' },
-    { status: 'waiting', label: '⏳ Waiting' },
-    { status: 'done', label: '✅ Done' },
-  ];
+  const statuses = ['idle', 'typing', 'reading', 'reviewing', 'waiting', 'done'];
   
-  for (const [id, config] of Object.entries(AGENT_COLORS)) {
+  for (const config of AGENT_CONFIG) {
     const panel = document.createElement('div');
     panel.className = 'agent-panel';
     
@@ -432,7 +478,7 @@ function createControls() {
     
     const statusText = document.createElement('div');
     statusText.className = 'status-text';
-    statusText.id = `status-${id}`;
+    statusText.id = `status-${config.id}`;
     statusText.textContent = 'Standing by';
     panel.appendChild(statusText);
     
@@ -441,9 +487,9 @@ function createControls() {
     
     for (const s of statuses) {
       const btn = document.createElement('button');
-      btn.textContent = s.label;
-      btn.dataset.status = s.status;
-      btn.onclick = () => updateAgent(id, s.status);
+      btn.textContent = s === 'idle' ? '◉ Idle' : s === 'typing' ? '⌨ Type' : s === 'reading' ? '📖 Read' : s === 'reviewing' ? '🔍 Review' : s === 'waiting' ? '⏳ Wait' : '✅ Done';
+      btn.dataset.status = s;
+      btn.onclick = () => updateAgent(config.id, s);
       btns.appendChild(btn);
     }
     
@@ -462,13 +508,14 @@ async function updateAgent(id, status) {
     const agent = await res.json();
     agents[id].status = agent.status;
     agents[id].statusText = agent.statusText;
-    document.getElementById(`status-${id}`).textContent = agent.statusText;
+    const el = document.getElementById(`status-${id}`);
+    if (el) el.textContent = agent.statusText;
   } catch (e) {
     console.error('Failed to update:', e);
   }
 }
 
-// ── Poll Agent States ────────────────────────────────────────
+// ── Poll ─────────────────────────────────────────────────────
 
 async function pollStates() {
   try {
@@ -482,24 +529,8 @@ async function pollStates() {
         if (el) el.textContent = agent.statusText;
       }
     }
-  } catch (e) {
-    // silent
-  }
+  } catch (_) {}
 }
-
-// ── Animation Update ─────────────────────────────────────────
-
-function updateAnimations() {
-  for (const agent of Object.values(agents)) {
-    agent.animFrame = (agent.animFrame + 1) % FRAMES_PER_ROW;
-  }
-}
-
-// Animate a bit faster when typing
-setInterval(updateAnimations, 200);
-
-// Poll for state changes
-setInterval(pollStates, 2000);
 
 // ── Init ─────────────────────────────────────────────────────
 
@@ -510,6 +541,7 @@ async function init() {
   pollStates();
 }
 
+setInterval(pollStates, 2000);
 init();
 </script>
 </body>

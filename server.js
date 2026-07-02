@@ -16,7 +16,8 @@ const AGENTS = {
   hermes: {
     id: 'hermes',
     name: 'Hermes',
-    role: 'Project Manager',
+    role: 'Product Manager',
+    team: 'Product',
     color: '#00BCD4',
     status: 'idle',
     statusText: 'Standing by',
@@ -27,7 +28,8 @@ const AGENTS = {
   openclaw: {
     id: 'openclaw',
     name: 'OpenClaw',
-    role: 'Software Engineer',
+    role: 'Senior Engineer',
+    team: 'Engineering',
     color: '#4CAF50',
     status: 'idle',
     statusText: 'Standing by',
@@ -38,13 +40,50 @@ const AGENTS = {
   chatgpt: {
     id: 'chatgpt',
     name: 'ChatGPT',
-    role: 'CTO + QA',
+    role: 'CTO / QA / Critic',
+    team: 'Executive',
     color: '#9C27B0',
     status: 'idle',
     statusText: 'Standing by',
     desk: 2,
     palette: 2,
     emoji: '🧠'
+  },
+  codex: {
+    id: 'codex',
+    name: 'Codex',
+    role: 'Staff Engineer',
+    team: 'Engineering',
+    color: '#FF6B35',
+    status: 'idle',
+    statusText: 'Standing by',
+    desk: 3,
+    palette: 0,
+    emoji: '🏗'
+  },
+  claude: {
+    id: 'claude',
+    name: 'Claude',
+    role: 'Design Director',
+    team: 'Design',
+    color: '#E91E63',
+    status: 'idle',
+    statusText: 'Standing by',
+    desk: 4,
+    palette: 1,
+    emoji: '🎨'
+  },
+  gemini: {
+    id: 'gemini',
+    name: 'Gemini',
+    role: 'Research Analyst',
+    team: 'Research',
+    color: '#FFD700',
+    status: 'idle',
+    statusText: 'Standing by',
+    desk: 5,
+    palette: 2,
+    emoji: '🔍'
   }
 };
 
@@ -120,9 +159,13 @@ app.get('/api/sprites/:id', (req, res) => {
 // ── Start ───────────────────────────────────────────────────
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n  🏢 S.STUDIO Agent Office`);
-  console.log(`  ─────────────────────────`);
-  console.log(`  Characters: Hermes 📋 | OpenClaw 💻 | ChatGPT 🧠`);
-  console.log(`  API:        http://localhost:${PORT}/api/agents`);
-  console.log(`  Office:     http://localhost:${PORT}/\n`);
+  console.log(`\n  🏢 S.STUDIO Agent Office (12-Person Studio)`);
+  console.log(`  ────────────────────────────────────────`);
+  console.log(`  Exec:    👩🏻 Sammi (Founder & CEO)`);
+  console.log(`  Product: 📋 Hermes`);
+  console.log(`  Eng:     💻 OpenClaw  🏗 Codex  🧪 ChatGPT`);
+  console.log(`  Design:  🎨 Claude`);
+  console.log(`  Research:🔍 Gemini`);
+  console.log(`  API:      http://localhost:${PORT}/api/agents`);
+  console.log(`  Office:   http://localhost:${PORT}/\n`);
 });
