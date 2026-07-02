@@ -1,0 +1,24 @@
+name: Notion
+owner: hermes
+backup_owner: sammi
+type: external_saas
+
+capabilities:
+  - create_docs
+  - update_docs
+  - manage_wiki
+  - manage_database
+  - manage_templates
+
+limitations:
+  - cannot_share_external
+  - master_docs: "Product strategy docs are Sammi-only"
+
+agent_permissions:
+  hermes: write
+  sammi: admin
+  openclaw: read
+  chatgpt: read
+  codex: read
+  claude: read
+  gemini: read

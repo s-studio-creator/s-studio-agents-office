@@ -1,0 +1,18 @@
+event: release_ready
+description: "Feature has passed review and is ready for release decision"
+producer: chatgpt
+subscribers:
+  - sammi (decider)
+  - hermes (notification)
+
+schema:
+  feature_id: string
+  feature_name: string
+  pr_link: string
+  design_link: string?
+  review_summary: string
+  risk_level: enum [low, medium, high]
+  release_notes: string?
+
+timeout: 48h (awaiting human)
+output_event: release_completed

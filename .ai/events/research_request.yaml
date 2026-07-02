@@ -1,0 +1,16 @@
+event: research_request
+description: "A research task for market competitors, APIs, or SDKs"
+producer: hermes
+subscribers:
+  - gemini
+
+schema:
+  research_id: string
+  topic: string
+  questions: string[]
+  scope: enum [competitor, api, sdk, market, technology]
+  urgency: enum [low, medium, high]
+  deadline: datetime?
+
+timeout: 24h
+output_event: research_completed

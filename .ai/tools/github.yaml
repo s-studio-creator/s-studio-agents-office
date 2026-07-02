@@ -1,0 +1,30 @@
+name: GitHub
+owner: openclaw
+backup_owner: codex
+type: external_saas
+
+capabilities:
+  - create_repo
+  - manage_branches
+  - create_issues
+  - manage_prs
+  - review_code
+  - manage_actions
+  - manage_secrets
+  - manage_environments
+
+limitations:
+  - cannot_delete_org
+  - cannot_remove_admins
+
+input_event: engineering_request
+output: pr_link
+
+agent_permissions:
+  openclaw: write
+  codex: admin
+  chatgpt: read (pull-requests only)
+  hermes: read (issues only)
+  sammi: admin
+  claude: none
+  gemini: none

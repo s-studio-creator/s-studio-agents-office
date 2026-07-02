@@ -1,0 +1,18 @@
+event: review_completed
+description: "Code review has passed. Ready for CEO approval."
+producer: chatgpt
+subscribers:
+  - hermes
+  - sammi
+
+schema:
+  feature_id: string
+  pr_link: string
+  reviewer: string
+  verdict: enum [approved, changes_requested, blocked]
+  review_notes: string?
+  qa_passed: boolean
+  performance_ok: boolean
+
+timeout: 24h
+output_event: release_ready

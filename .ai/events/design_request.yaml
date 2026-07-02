@@ -1,0 +1,19 @@
+event: design_request
+description: "Request for UI/UX design work on a feature"
+producer: hermes
+subscribers:
+  - claude
+  - chatgpt (notification)
+
+schema:
+  feature_id: string
+  feature_name: string
+  priority: enum [low, medium, high, critical]
+  context:
+    issue_link: string
+    notion_doc: string?
+    reference_designs: string[]?
+  deadline: datetime?
+
+timeout: 48h
+output_event: design_completed

@@ -1,0 +1,106 @@
+name: Access Control
+description: "Default-deny access policy for tools and events"
+
+default_deny: true
+
+# ── Tool Access ───────────────────────────────────────────
+tool_policies:
+  - tool: github
+    write: [openclaw, codex, sammi]
+    read: [openclaw, codex, chatgpt, hermes, sammi]
+    admin: [codex, sammi]
+    none: [claude, gemini]
+
+  - tool: figma
+    write: [claude]
+    read: [claude, sammi, hermes]
+    none: [openclaw, chatgpt, codex, gemini]
+
+  - tool: linear
+    write: [hermes, sammi]
+    read: [hermes, openclaw, sammi, chatgpt]
+    admin: [sammi]
+    none: [claude, gemini, codex]
+
+  - tool: notion
+    write: [hermes, sammi]
+    read: [hermes, sammi, openclaw, chatgpt, claude, gemini]
+    admin: [sammi]
+
+  - tool: browser
+    full: [gemini, chatgpt]
+    limited: [openclaw]
+    none: [hermes, claude, codex]
+
+  - tool: slack
+    write: [hermes, sammi]
+    read: [hermes, sammi, openclaw]
+    none: [chatgpt, claude, gemini, codex]
+
+  - tool: drive
+    write: [hermes, sammi]
+    read: [hermes, sammi, openclaw, chatgpt, claude, gemini, codex]
+    admin: [sammi]
+
+  - tool: analytics
+    read: [openclaw, sammi, hermes, chatgpt]
+    none: [claude, gemini, codex]
+
+# ── Event Access ──────────────────────────────────────────
+event_policies:
+  - event: design_request
+    produce: [hermes, sammi]
+    consume: [claude]
+
+  - event: design_completed
+    produce: [claude]
+    consume: [hermes, chatgpt, sammi]
+
+  - event: engineering_request
+    produce: [hermes, sammi]
+    consume: [openclaw, codex]
+
+  - event: pr_ready
+    produce: [openclaw]
+    consume: [chatgpt, hermes, sammi]
+
+  - event: review_completed
+    produce: [chatgpt]
+    consume: [hermes, sammi, openclaw]
+
+  - event: release_ready
+    produce: [chatgpt]
+    consume: [sammi]
+
+  - event: release_completed
+    produce: [sammi]
+    consume: [openclaw, hermes]
+
+  - event: bug_reported
+    produce: [hermes, sammi, openclaw]
+    consume: [openclaw, hermes, sammi]
+
+  - event: research_request
+    produce: [hermes, sammi]
+    consume: [gemini]
+
+  - event: research_completed
+    produce: [gemini]
+    consume: [hermes, chatgpt, sammi]
+
+  - event: product_vision_set
+    produce: [sammi]
+    consume: [hermes, chatgpt, claude, gemini]
+
+  - event: architecture_decision
+    produce: [chatgpt, codex]
+    consume: [openclaw, hermes, sammi, codex]
+
+# ── Escalation Rules ──────────────────────────────────────
+escalation:
+  - condition: "No event consumed within timeout"
+    action: "Alert hermes → escalate to sammi"
+  - condition: "QA review fails 3+ times"
+    action: "Escalate to sammi for decision"
+  - condition: "Critical bug in production"
+    action: "Bypass normal workflow, go straight to openclaw + sammi"

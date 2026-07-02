@@ -1,0 +1,18 @@
+event: engineering_request
+description: "Request for engineering work (feature or bug fix)"
+producer: hermes
+subscribers:
+  - openclaw (primary)
+  - codex (if infra scope)
+
+schema:
+  feature_id: string
+  issue_link: string
+  priority: enum [low, medium, high, critical]
+  scope: enum [feature, bugfix, refactor, infrastructure, hotfix]
+  design_link: string?
+  acceptance_criteria: string[]
+  deadline: datetime?
+
+timeout: 72h
+output_event: pr_ready

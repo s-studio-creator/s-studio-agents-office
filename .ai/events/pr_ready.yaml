@@ -1,0 +1,22 @@
+event: pr_ready
+description: "A pull request is ready for review"
+producer: openclaw
+subscribers:
+  - chatgpt (qa)
+  - codex (if infra changes)
+  - hermes (notification)
+
+schema:
+  feature_id: string
+  pr_link: string
+  branch: string
+  description: string
+  type: enum [feature, bugfix, refactor, infrastructure]
+  reviewer_notes: string?
+  tests_added: boolean
+  screenshots: string[]?
+
+timeout: 24h
+output_event:
+  - review_completed
+  - review_changes_requested

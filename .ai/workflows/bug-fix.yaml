@@ -1,0 +1,45 @@
+name: Bug Fix
+description: "Quick fix flow for production bugs"
+
+participants:
+  - hermes (triage)
+  - openclaw (fix)
+  - chatgpt (qa)
+  - sammi (approve)
+
+steps:
+  - id: 1
+    name: Report
+    actor: hermes
+    action: Create bug report in Linear, triage severity
+    event: bug_reported
+    output: "Bug report created"
+
+  - id: 2
+    name: Fix
+    actor: openclaw
+    action: Hotfix branch, fix, write test
+    event: pr_ready
+    depends_on: [1]
+    output: "PR ready"
+
+  - id: 3
+    name: Quick Review
+    actor: chatgpt (qa)
+    action: Expedited review for bug fixes
+    event: review_completed
+    depends_on: [2]
+    output: "Fix approved"
+
+  - id: 4
+    name: Ship
+    actor: sammi
+    action: Approve deployment
+    event: release_completed
+    depends_on: [3]
+    output: "Fix live"
+
+sla:
+  critical: 4h
+  major: 24h
+  minor: 1w

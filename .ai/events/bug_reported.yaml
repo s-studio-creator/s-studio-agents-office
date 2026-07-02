@@ -1,0 +1,23 @@
+event: bug_reported
+description: "A bug has been reported in production or development"
+producer: hermes
+subscribers:
+  - openclaw
+  - sammi (if critical)
+
+schema:
+  bug_id: string
+  severity: enum [cosmetic, minor, major, critical]
+  description: string
+  reproduction_steps: string?
+  affected_version: string?
+  screenshots: string[]?
+  reported_by: string
+
+timeout:
+  critical: 4h
+  major: 24h
+  minor: 1w
+  cosmetic: 2w
+
+output_event: pr_ready

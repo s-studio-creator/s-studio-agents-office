@@ -1,0 +1,33 @@
+name: Research
+description: "Market/API/SDK research workflow"
+
+participants:
+  - hermes (request)
+  - gemini (execute)
+  - chatgpt (synthesize)
+
+steps:
+  - id: 1
+    name: Request
+    actor: hermes
+    action: Define research questions, scope
+    event: research_request
+    output: "Research brief"
+
+  - id: 2
+    name: Execute
+    actor: gemini
+    action: Web research, API docs, competitor analysis
+    event: research_completed
+    depends_on: [1]
+    output: "Research summary"
+
+  - id: 3
+    name: Synthesize
+    actor: chatgpt
+    action: Turn research into actionable recommendations
+    event: engineering_request or architecture_decision
+    depends_on: [2]
+    output: "Decision-ready recommendations"
+
+sla: "Standard: 24h. Urgent: 12h."

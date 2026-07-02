@@ -1,0 +1,88 @@
+name: Feature Development
+description: "End-to-end flow from feature idea to production release"
+
+participants:
+  - sammi (initiator, approver)
+  - hermes (pm)
+  - claude (design)
+  - openclaw (engineering)
+  - chatgpt (qa, cto)
+  - codex (infrastructure, as-needed)
+
+steps:
+  - id: 1
+    name: Vision
+    actor: sammi
+    action: Emit product_vision_set or feature_requested
+    event: product_vision_set
+    output: "Feature is defined"
+
+  - id: 2
+    name: Plan
+    actor: hermes
+    action: Create sprint task, break down work
+    event: design_request | engineering_request
+    depends_on: [1]
+    output: "Tasks created in Linear / event emitted"
+
+  - id: 2a
+    name: Design (conditional)
+    actor: claude
+    action: If design_request, create design in Figma
+    condition: event == design_request
+    event: design_completed
+    depends_on: [2]
+    output: "Figma file ready"
+
+  - id: 3
+    name: Build
+    actor: openclaw
+    action: Create branch, implement feature, write tests
+    event: engineering_request (or design_completed)
+    event: pr_ready
+    depends_on: [2, 2a]
+    output: "PR ready for review"
+
+  - id: 3a
+    name: Infrastructure (conditional)
+    actor: codex
+    action: If infra needed, set up pipelines, configs
+    condition: scope == infrastructure
+    event: infrastructure_ready
+    depends_on: [2]
+    output: "Infrastructure ready"
+
+  - id: 4
+    name: Review
+    actor: chatgpt (qa)
+    action: Code review, UX review, performance check
+    event: review_completed
+    depends_on: [3]
+    output: "Review passed or changes requested"
+
+  - id: 4a
+    name: CTO Review (conditional)
+    actor: chatgpt (cto)
+    action: Architecture review for complex changes
+    condition: high_risk || new_system
+    event: architecture_decision
+    depends_on: [3]
+    output: "Architecture approved"
+
+  - id: 5
+    name: Approve
+    actor: sammi
+    action: Final QA, approve release
+    event: release_completed
+    depends_on: [4, 4a]
+    output: "Released to production"
+
+  - id: 6
+    name: Ship
+    actor: openclaw
+    action: Merge, deploy, monitor
+    event: engineering_status
+    depends_on: [5]
+    output: "Live in production"
+
+sla: "Standard feature: 72h. Critical: 24h. Hotfix: 4h."

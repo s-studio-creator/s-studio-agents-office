@@ -1,0 +1,27 @@
+name: Figma
+owner: claude
+type: external_saas
+
+capabilities:
+  - read_files
+  - create_components
+  - update_screens
+  - create_variants
+  - read_libraries
+
+limitations:
+  - cannot_merge_code
+  - cannot_change_product_vision
+  - cannot_share_external
+
+input_event: design_request
+output: figma_link
+
+agent_permissions:
+  claude: write
+  sammi: read
+  hermes: read
+  openclaw: none
+  chatgpt: none
+  codex: none
+  gemini: none

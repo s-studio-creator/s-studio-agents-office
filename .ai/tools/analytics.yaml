@@ -1,0 +1,22 @@
+name: Store Analytics
+owner: openclaw
+type: external_saas
+
+capabilities:
+  - read_metrics
+  - read_crash_reports
+  - read_usage_data
+  - read_revenue
+
+limitations:
+  - read_only
+  - cannot_export_data
+
+agent_permissions:
+  openclaw: read
+  sammi: read
+  hermes: read
+  chatgpt: read
+  codex: read
+  claude: none
+  gemini: none

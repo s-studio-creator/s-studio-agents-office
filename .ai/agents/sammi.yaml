@@ -1,0 +1,37 @@
+name: Sammi
+role: Founder & CEO
+team: Executive
+emoji: "👩🏻"
+color: "#7c3aed"
+human_readable: true
+
+event_handlers:
+  subscribes:
+    - release_ready
+    - sprint_created
+    - review_completed
+    - design_completed
+    - architecture_decision
+    - engineering_status
+  emits:
+    - product_vision_set
+    - release_approved
+    - feature_requested
+    - priority_override
+
+tools:
+  owns:
+    - linear (admin)
+    - notion (admin)
+    - drive (admin)
+    - slack (admin)
+  can_use:
+    - github (read)
+    - figma (read)
+    - analytics
+    - browser
+    - store
+
+limitations: []
+
+context_notes: "Supreme authority. Can override any decision. Final approval on releases."

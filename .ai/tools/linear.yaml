@@ -1,0 +1,28 @@
+name: Linear
+owner: hermes
+backup_owner: sammi
+type: external_saas
+
+capabilities:
+  - create_issues
+  - update_issues
+  - manage_sprints
+  - manage_backlog
+  - comment
+  - read_roadmap
+
+limitations:
+  - cannot_delete_projects
+  - cannot_manage_teams
+
+input_event: feature_requested
+output: issue_link
+
+agent_permissions:
+  hermes: write
+  sammi: admin
+  openclaw: write (issues assigned to them)
+  chatgpt: read
+  codex: read
+  claude: read
+  gemini: read

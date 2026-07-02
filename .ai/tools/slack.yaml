@@ -1,0 +1,24 @@
+name: Slack
+owner: hermes
+backup_owner: sammi
+type: external_saas
+
+capabilities:
+  - send_message
+  - read_channel
+  - create_channel
+  - send_dm
+  - manage_webhooks
+
+limitations:
+  - no_dm (block)
+  - no_automated_posting to #general
+
+agent_permissions:
+  hermes: write (notifications)
+  sammi: admin
+  openclaw: write (dev channel only)
+  chatgpt: none
+  codex: none
+  claude: none
+  gemini: none

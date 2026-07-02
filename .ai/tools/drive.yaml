@@ -1,0 +1,22 @@
+name: Google Drive
+owner: hermes
+backup_owner: sammi
+type: external_saas
+
+capabilities:
+  - read_folder
+  - upload_files
+  - manage_permissions
+  - search
+
+limitations:
+  - no_delete_shared_files
+
+agent_permissions:
+  hermes: write
+  sammi: admin
+  openclaw: read
+  chatgpt: read
+  codex: read
+  claude: read
+  gemini: read

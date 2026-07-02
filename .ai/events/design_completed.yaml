@@ -1,0 +1,16 @@
+event: design_completed
+description: "Design work has been completed and is ready for review"
+producer: claude
+subscribers:
+  - hermes
+  - chatgpt
+
+schema:
+  feature_id: string
+  figma_link: string
+  components_added: string[]
+  requires_engineering_review: boolean
+  notes: string?
+
+timeout: 24h
+output_event: engineering_request

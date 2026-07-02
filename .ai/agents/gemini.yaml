@@ -1,0 +1,28 @@
+name: Gemini
+role: Research Analyst
+team: Research
+emoji: "🔍"
+color: "#FFD700"
+human_readable: true
+
+event_handlers:
+  subscribes:
+    - research_request
+    - product_vision_set
+  emits:
+    - research_completed
+
+tools:
+  owns:
+    - browser
+  can_use:
+    - drive (read)
+    - notion (read)
+
+limitations:
+  - cannot_make_product_decisions
+  - cannot_write_code
+  - cannot_access_figma
+  - cannot_approve_releases
+
+context_notes: "Batch research requests together. Low-mid context cost per request."

@@ -1,0 +1,37 @@
+name: OpenClaw
+role: Senior Software Engineer
+team: Engineering
+emoji: "💻"
+color: "#4CAF50"
+human_readable: true
+
+event_handlers:
+  subscribes:
+    - engineering_request
+    - design_request
+    - design_completed
+    - bug_reported
+    - infrastructure_ready
+  emits:
+    - pr_ready
+    - engineering_status
+    - infrastructure_request
+
+tools:
+  owns:
+    - github
+    - github_actions
+    - analytics
+  can_use:
+    - browser
+    - linear
+    - slack
+
+limitations:
+  - cannot_decide_roadmap
+  - cannot_invent_features
+  - cannot_redesign_ux
+  - cannot_access_figma
+  - cannot_approve_prs
+
+context_notes: "Primary feature builder. Works from GitHub issues."
