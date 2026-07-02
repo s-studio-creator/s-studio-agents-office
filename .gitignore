@@ -2,3 +2,7 @@ node_modules/
 .env
 dist/
 .DS_Store
+recolor-sprites.mjs
+render-office.mjs
+office-render.png
+screenshot*.png

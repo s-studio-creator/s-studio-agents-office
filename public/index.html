@@ -3,50 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>S.STUDIO Agent Office</title>
+<title>🌸 S.STUDIO Agent Office</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #1a1a2e;
-    color: #e0e0e0;
+    background: #fff5f8;
+    color: #5a3050;
     font-family: 'Courier New', monospace;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 16px;
   }
   h1 {
     font-size: 18px;
-    color: #7c3aed;
+    background: linear-gradient(90deg, #e84090, #d47bff, #a055cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 2px;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
   }
   .subtitle {
     font-size: 11px;
-    color: #666;
-    margin-bottom: 16px;
+    color: #b070a0;
+    margin-bottom: 12px;
   }
   #office-canvas {
-    border: 2px solid #333;
-    border-radius: 8px;
+    border: 2px solid #e0b0d0;
+    border-radius: 10px;
     image-rendering: pixelated;
-    box-shadow: 0 0 30px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 30px rgba(232,64,144,0.1);
     max-width: 100%;
   }
   .controls {
-    margin-top: 16px;
+    margin-top: 14px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 8px;
     max-width: 720px;
     width: 100%;
   }
   .agent-panel {
-    background: #16213e;
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: #fff5fa;
+    border: 1px solid #f0c0e0;
+    border-radius: 10px;
     padding: 10px;
+    box-shadow: 0 2px 8px rgba(200,100,160,0.08);
   }
   .agent-panel h3 {
     font-size: 13px;
@@ -54,13 +58,13 @@
   }
   .agent-panel .role {
     font-size: 10px;
-    color: #888;
-    margin-bottom: 6px;
+    color: #b080a0;
+    margin-bottom: 5px;
   }
   .agent-panel .status-text {
     font-size: 11px;
-    color: #4ade80;
-    margin-bottom: 6px;
+    color: #d04080;
+    margin-bottom: 5px;
     min-height: 16px;
   }
   .status-btns {
@@ -69,64 +73,53 @@
     flex-wrap: wrap;
   }
   .status-btns button {
-    background: #0f3460;
-    border: 1px solid #333;
-    color: #ccc;
+    background: #fff0f8;
+    border: 1px solid #f0c0e0;
+    color: #b06090;
     padding: 3px 6px;
     font-size: 10px;
-    border-radius: 3px;
+    border-radius: 6px;
     cursor: pointer;
     font-family: 'Courier New', monospace;
   }
   .status-btns button:hover {
-    background: #1a5276;
-    border-color: #7c3aed;
-  }
-  .status-btns button.active {
-    background: #7c3aed;
-    border-color: #7c3aed;
-    color: #fff;
+    background: #ffe0f0;
+    border-color: #e84090;
+    color: #d04070;
   }
   .api-section {
-    margin-top: 14px;
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 8px;
+    margin-top: 12px;
+    background: #fff0f8;
+    border: 1px solid #f0c0e0;
+    border-radius: 10px;
     padding: 10px;
     max-width: 720px;
     width: 100%;
   }
   .api-section h3 {
     font-size: 11px;
-    color: #666;
+    color: #b070a0;
     margin-bottom: 6px;
   }
   .api-section code {
     font-size: 10px;
-    color: #888;
+    color: #c080b0;
     display: block;
     margin-bottom: 3px;
   }
   .footer {
-    margin-top: 14px;
+    margin-top: 12px;
     font-size: 10px;
-    color: #444;
-  }
-  .team-badge {
-    display: inline-block;
-    font-size: 8px;
-    padding: 1px 4px;
-    border-radius: 3px;
-    margin-left: 4px;
+    color: #d0a0c0;
   }
 </style>
 </head>
 <body>
 
-<h1>🏢 S.STUDIO AGENT OFFICE</h1>
-<div class="subtitle">👩🏻 Sammi + 6 AI Agents — 12-Person Startup Mode</div>
+<h1>🌸 S.STUDIO AI OFFICE</h1>
+<div class="subtitle">👩🏻 Sammi + 6 AI Agents・Pinky Startup Mode ✨</div>
 
-<canvas id="office-canvas" width="800" height="420"></canvas>
+<canvas id="office-canvas" width="880" height="480"></canvas>
 
 <div class="controls" id="controls"></div>
 
@@ -137,41 +130,37 @@
   <code>GET /api/agents — View all states</code>
 </div>
 
-<div class="footer">S.STUDIO — NextBite AI Software Studio 🦀</div>
+<div class="footer">S.STUDIO — NextBite AI Software Studio 🦀💖</div>
 
 <script>
 // ── Agent Config ──────────────────────────────────────────────
 
 const AGENT_CONFIG = [
-  { id: 'hermes',   name: 'Hermes',   role: 'Product Manager',         team: 'Product',    primary: '#00BCD4', secondary: '#00838F', emoji: '📋',  desk: 0, colorHash: '#00BCD4' },
-  { id: 'openclaw', name: 'OpenClaw', role: 'Senior Engineer',         team: 'Engineering', primary: '#4CAF50', secondary: '#2E7D32', emoji: '💻',  desk: 1, colorHash: '#4CAF50' },
-  { id: 'chatgpt',  name: 'ChatGPT',  role: 'CTO / QA / Critic',      team: 'Executive',   primary: '#9C27B0', secondary: '#6A1B9A', emoji: '🧠',  desk: 2, colorHash: '#9C27B0' },
-  { id: 'codex',    name: 'Codex',    role: 'Staff Engineer',          team: 'Engineering', primary: '#FF6B35', secondary: '#BF360C', emoji: '🏗',  desk: 3, colorHash: '#FF6B35' },
-  { id: 'claude',   name: 'Claude',   role: 'Design Director',         team: 'Design',      primary: '#E91E63', secondary: '#880E4F', emoji: '🎨',  desk: 4, colorHash: '#E91E63' },
-  { id: 'gemini',   name: 'Gemini',   role: 'Research Analyst',        team: 'Research',    primary: '#FFD700', secondary: '#F57F17', emoji: '🔍',  desk: 5, colorHash: '#FFD700' },
+  { id: 'hermes',   name: 'Hermes',   role: 'Product Manager',     team: 'Product',    primary: '#00BCD4', secondary: '#00838F', emoji: '📋',  desk: 0 },
+  { id: 'openclaw', name: 'OpenClaw', role: 'Senior Engineer',     team: 'Engineering', primary: '#4CAF50', secondary: '#2E7D32', emoji: '💻',  desk: 1 },
+  { id: 'chatgpt',  name: 'ChatGPT',  role: 'CTO / QA / Critic',  team: 'Executive',   primary: '#9C27B0', secondary: '#6A1B9A', emoji: '🧠',  desk: 2 },
+  { id: 'codex',    name: 'Codex',    role: 'Staff Engineer',      team: 'Engineering', primary: '#FF6B35', secondary: '#D84315', emoji: '🏗',  desk: 3 },
+  { id: 'claude',   name: 'Claude',   role: 'Design Director',     team: 'Design',      primary: '#E91E63', secondary: '#880E4F', emoji: '🎨',  desk: 4 },
+  { id: 'gemini',   name: 'Gemini',   role: 'Research Analyst',    team: 'Research',    primary: '#FFD700', secondary: '#F57F17', emoji: '🔍',  desk: 5 },
 ];
 
 const STATUS_MAP = {
-  idle: 'Standing by',
-  typing: 'Writing code...',
-  reading: 'Reading files...',
-  reviewing: 'Reviewing...',
-  waiting: 'Waiting for input',
-  running: 'Running...',
-  done: 'Done ✓',
+  idle: '✨ Standing by',
+  typing: '💻 Writing code...',
+  reading: '📖 Reading files...',
+  reviewing: '🔍 Reviewing...',
+  waiting: '⏳ Waiting for input',
+  running: '⚡ Running...',
+  done: '✅ Done!',
 };
 
-// ── Load Character Sprites ──────────────────────────────────
+// ── Load ALL Sprites ──────────────────────────────────────────
 
 const charImages = {};
-const CHAR_FRAME_W = 16;
-const CHAR_FRAME_H = 32;
-const FRAMES_PER_ROW = 7;
+const SPRITE_IDS = { hermes: 0, openclaw: 1, chatgpt: 2, codex: 3, claude: 4, gemini: 5 };
 
 async function loadSprites() {
-  // Only hermes, openclaw, chatgpt have real sprites (indices 0,1,2)
-  const spriteMap = { hermes: 0, openclaw: 1, chatgpt: 2 };
-  const promises = Object.entries(spriteMap).map(async ([name, idx]) => {
+  const promises = Object.entries(SPRITE_IDS).map(async ([name, idx]) => {
     const img = new Image();
     img.src = `sprites/char_${idx}.png`;
     await new Promise((resolve, reject) => {
@@ -181,230 +170,290 @@ async function loadSprites() {
     charImages[name] = img;
   });
   await Promise.all(promises);
+  console.log('✅ All sprites loaded:', Object.keys(charImages).join(', '));
 }
 
 // ── Canvas ──────────────────────────────────────────────────
 
 const canvas = document.getElementById('office-canvas');
 const ctx = canvas.getContext('2d');
-const TILE = 16;
-const COLS = 50;
-const ROWS = 26;
 
-// Office layout
-const T = { FLOOR: 0, WALL: 1, DESK: 2, CHAIR: 3, PC: 4, BOARD: 5, PLANT: 6 };
+// ── LIGHT PINK PALETTE ──────────────────────────────────────
+const COLORS = {
+  floor1:    '#fff0f8',
+  floor2:    '#fce8f2',
+  floor3:    '#fde0f0',
+  wall:      '#f5d0e8',
+  wallLine:  '#e0b0d0',
+  desk:      '#e8b0d0',
+  deskWood:  '#f0c0d8',
+  deskLine:  '#d890b8',
+  chair:     '#f0d0e0',
+  chairIn:   '#f8e0ee',
+  pcBody:    '#d0a0c0',
+  pcScreen:  '#c090b0',
+  pcGlow:    'rgba(212,123,255,0.10)',
+  board:     '#ffe0f0',
+  boardIn:   '#fff0f8',
+  plant:     '#ff80b0',
+  plantDk:   '#e06090',
+  pot:       '#d080b0',
+  rug:       'rgba(255,107,193,0.12)',
+  rugAlt:    'rgba(212,123,255,0.10)',
+  lightGlow: 'rgba(255,150,200,0.12)',
+  window:    '#d0a0c0',
+  windowIn:  '#fff0f8',
+};
 
-const map = Array.from({ length: ROWS }, () => Array(COLS).fill(T.FLOOR));
+// ── Build Pink Office Map ──────────────────────────────────
+const COLS = 55, ROWS = 30;
+const T = { FLOOR:0, WALL:1, DESK:2, CHAIR:3, PC:4, BOARD:5, PLANT:6, RUG:7, LIGHT:8, SHELF:9, POSTER:10, COFFEE:11, WINDOW:12, RUG2:13 };
+
+const map = Array.from({length: ROWS}, () => Array(COLS).fill(T.FLOOR));
 
 // Walls
-for (let c = 0; c < COLS; c++) { map[0][c] = T.WALL; map[ROWS-1][c] = T.WALL; }
-for (let r = 0; r < ROWS; r++) { map[r][0] = T.WALL; map[r][COLS-1] = T.WALL; }
+for (let c=0; c<COLS; c++) { map[0][c]=T.WALL; map[ROWS-1][c]=T.WALL; }
+for (let r=0; r<ROWS; r++) { map[r][0]=T.WALL; map[r][COLS-1]=T.WALL; }
 
-// 6 desks in a U-shape layout
+// Windows on left and right walls
+for (let r=4; r<=7; r++) {
+  map[r][0] = T.WINDOW;
+  map[r][COLS-1] = T.WINDOW;
+}
+
+// 6 desks: 5 in a row + 1 on the side
 const DESK_POSITIONS = [
-  { col: 6,  row: 16, agent: 'hermes' },
-  { col: 14, row: 16, agent: 'openclaw' },
-  { col: 22, row: 16, agent: 'chatgpt' },
-  { col: 30, row: 16, agent: 'codex' },
-  { col: 38, row: 16, agent: 'claude' },
-  { col: 38, row: 6,  agent: 'gemini' },
+  { col: 7,  row: 19, agent: 'hermes' },
+  { col: 16, row: 19, agent: 'openclaw' },
+  { col: 25, row: 19, agent: 'chatgpt' },
+  { col: 34, row: 19, agent: 'codex' },
+  { col: 43, row: 19, agent: 'claude' },
+  { col: 43, row: 8,  agent: 'gemini' }, // separate desk upper right
 ];
 
-// Place desks
-for (const desk of DESK_POSITIONS) {
-  const { col, row } = desk;
-  map[row][col] = T.DESK;
-  map[row][col+1] = T.DESK;
-  map[row+1][col] = T.CHAIR;
-  map[row+1][col+1] = T.CHAIR;
+for (const d of DESK_POSITIONS) {
+  const {col, row} = d;
+  map[row][col] = T.DESK; map[row][col+1] = T.DESK;
+  map[row+1][col] = T.CHAIR; map[row+1][col+1] = T.CHAIR;
   map[row-1][col] = T.PC;
 }
 
-// Whiteboard
-for (let c = 22; c < 28; c++) map[3][c] = T.BOARD;
+// Rugs under each desk
+for (const d of DESK_POSITIONS) {
+  for (let dr=-1; dr<=2; dr++)
+    for (let dc=-1; dc<=2; dc++) {
+      const rr = d.row+dr, cc = d.col+dc;
+      if (rr>=0 && rr<ROWS && cc>=0 && cc<COLS && map[rr][cc]===T.FLOOR) {
+        map[rr][cc] = (d.agent === 'hermes' || d.agent === 'chatgpt') ? T.RUG : T.RUG2;
+      }
+    }
+}
 
-// Plants
-for (let c = 3; c <= 4; c++) { map[5][c] = T.PLANT; map[5][COLS-1-c] = T.PLANT; }
+// Whiteboard (pink themed)
+for (let c=23; c<32; c++) map[3][c] = T.BOARD;
+
+// Ceiling lights
+for (let c=7; c<50; c+=8) map[1][c] = T.LIGHT;
+
+// Bookshelf on left wall
+for (let r=10; r<=14; r++) { map[r][1] = T.SHELF; map[r][2] = T.SHELF; }
+
+// Posters on walls
+map[2][10] = T.POSTER; map[2][11] = T.POSTER;
+map[2][42] = T.POSTER; map[2][43] = T.POSTER;
+
+// Coffee station
+map[16][4] = T.COFFEE; map[16][5] = T.COFFEE;
+
+// More plants
+for (let c=3; c<=4; c++) { map[2][c] = T.PLANT; map[2][COLS-1-c] = T.PLANT; }
+map[14][COLS-2] = T.PLANT; map[14][COLS-3] = T.PLANT;
 
 // ── Agent State ──────────────────────────────────────────────
 
 const agents = {};
 for (const config of AGENT_CONFIG) {
-  agents[config.id] = { ...config, status: 'idle', statusText: 'Standing by', frame: 0, animFrame: 0 };
+  agents[config.id] = { ...config, status: 'idle', statusText: '✨ Standing by', frame: 0 };
 }
 
-// ── Drawing ──────────────────────────────────────────────────
+// ── Drawing Functions ────────────────────────────────────────
 
-function drawTile(r, c, type) {
-  const x = c * TILE, y = r * TILE;
+function drawTile(r, c) {
+  const x = c * 16, y = r * 16;
+  const type = map[r][c];
+  
   switch(type) {
-    case T.FLOOR:
-      ctx.fillStyle = (r + c) % 2 === 0 ? '#2a2a40' : '#222238';
-      ctx.fillRect(x, y, TILE, TILE);
-      // Subtle grid lines
-      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
-      ctx.strokeRect(x, y, TILE, TILE);
+    case T.FLOOR: {
+      const v = ((r*7 + c*13) % 3);
+      ctx.fillStyle = v===0 ? COLORS.floor1 : v===1 ? COLORS.floor2 : COLORS.floor3;
+      ctx.fillRect(x, y, 16, 16);
       break;
+    }
     case T.WALL:
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fillRect(x, y, TILE, TILE);
-      ctx.strokeStyle = '#333355';
-      ctx.strokeRect(x, y, TILE, TILE);
+      ctx.fillStyle = COLORS.wall; ctx.fillRect(x,y,16,16);
+      ctx.strokeStyle = COLORS.wallLine; ctx.strokeRect(x,y,16,16);
+      ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(x+2,y+2,4,4); ctx.fillRect(x+10,y+2,4,4); ctx.fillRect(x+2,y+10,4,4); ctx.fillRect(x+10,y+10,4,4);
       break;
     case T.DESK:
-      ctx.fillStyle = '#3e2723';
-      ctx.fillRect(x, y, TILE*2, TILE);
-      ctx.fillStyle = '#4e342e';
-      ctx.fillRect(x+2, y+3, TILE*2-4, 2);
-      ctx.fillRect(x+2, y+8, TILE*2-4, 2);
+      ctx.fillStyle = COLORS.desk; ctx.fillRect(x,y,32,16);
+      ctx.fillStyle = COLORS.deskWood; ctx.fillRect(x+2,y+3,28,2); ctx.fillRect(x+2,y+8,28,2);
+      ctx.fillStyle = COLORS.deskLine; ctx.fillRect(x,y+15,32,1);
       break;
     case T.CHAIR:
-      ctx.fillStyle = '#37474f';
-      ctx.fillRect(x, y, TILE*2, TILE);
-      ctx.fillStyle = '#455a64';
-      ctx.fillRect(x+3, y+3, TILE*2-6, TILE-6);
+      ctx.fillStyle = COLORS.chair; ctx.fillRect(x,y,32,16);
+      ctx.fillStyle = COLORS.chairIn; ctx.fillRect(x+3,y+3,26,10);
+      ctx.strokeStyle = COLORS.wallLine; ctx.strokeRect(x+3,y+3,26,10);
       break;
     case T.PC:
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fillRect(x+12, y-6, 14, 12); // monitor
-      ctx.fillStyle = '#0a0a1a';
-      ctx.fillRect(x+14, y-4, 10, 8); // screen
-      ctx.fillStyle = 'rgba(124, 58, 237, 0.08)';
-      ctx.fillRect(x+14, y-4, 10, 8); // glow
-      ctx.fillStyle = '#333';
-      ctx.fillRect(x+17, y+6, 4, 4); // stand
-      ctx.fillRect(x+15, y+10, 8, 2); // base
+      ctx.fillStyle = COLORS.pcBody; ctx.fillRect(x+12,y-6,14,12);
+      ctx.fillStyle = COLORS.pcScreen; ctx.fillRect(x+14,y-4,10,8);
+      ctx.fillStyle = COLORS.pcGlow; ctx.fillRect(x+14,y-4,10,8);
+      ctx.fillStyle = '#2a1040'; ctx.fillRect(x+17,y+6,4,4); ctx.fillRect(x+15,y+10,8,2);
       break;
     case T.BOARD:
-      ctx.fillStyle = '#263238';
-      ctx.fillRect(x, y, 6*TILE, TILE*3);
-      ctx.fillStyle = '#37474f';
-      ctx.fillRect(x+2, y+2, 6*TILE-4, TILE*3-4);
+      ctx.fillStyle = COLORS.board; ctx.fillRect(x,y,9*16,3*16);
+      ctx.fillStyle = COLORS.boardIn; ctx.fillRect(x+2,y+2,9*16-4,3*16-4);
+      ctx.strokeStyle = '#e0b0d0'; ctx.strokeRect(x,y,9*16,3*16);
+      // Pin corners
+      ctx.fillStyle = '#e84090'; ctx.fillRect(x+4,y+4,4,4); ctx.fillRect(x+9*16-8,y+4,4,4);
+      ctx.fillRect(x+4,y+3*16-8,4,4); ctx.fillRect(x+9*16-8,y+3*16-8,4,4);
       break;
     case T.PLANT:
-      ctx.fillStyle = '#2e7d32';
-      ctx.fillRect(x+4, y+4, 8, 8); // leaves
-      ctx.fillRect(x+2, y+8, 12, 2);
-      ctx.fillStyle = '#1b5e20';
-      ctx.fillRect(x+6, y+6, 4, 4);
-      ctx.fillStyle = '#4a2c2a';
-      ctx.fillRect(x+4, y+10, 8, 6); // pot
+      ctx.fillStyle = COLORS.plant; ctx.fillRect(x+4,y+2,8,8);
+      ctx.fillStyle = COLORS.plantDk; ctx.fillRect(x+5,y+3,6,6);
+      ctx.fillStyle = COLORS.plant; ctx.fillRect(x+2,y+6,12,3);
+      ctx.fillStyle = COLORS.pot; ctx.fillRect(x+4,y+10,8,6);
+      break;
+    case T.RUG:
+      ctx.fillStyle = (r+c)%2===0 ? 'rgba(255,107,193,0.15)' : 'rgba(255,107,193,0.10)';
+      ctx.fillRect(x,y,16,16);
+      break;
+    case T.RUG2:
+      ctx.fillStyle = (r+c)%2===0 ? 'rgba(212,123,255,0.15)' : 'rgba(212,123,255,0.10)';
+      ctx.fillRect(x,y,16,16);
+      break;
+    case T.LIGHT:
+      ctx.fillStyle = '#f5d0e8'; ctx.fillRect(x,y,16,16);
+      ctx.fillStyle = 'rgba(232,64,144,0.25)'; ctx.fillRect(x+3,y+3,10,10);
+      ctx.fillStyle = COLORS.lightGlow; ctx.fillRect(x-8,y+5,32,30);
+      ctx.fillStyle = 'rgba(232,64,144,0.08)'; ctx.fillRect(x-16,y+10,48,25);
+      break;
+    case T.SHELF:
+      ctx.fillStyle = '#f5d0e8'; ctx.fillRect(x,y,32,5*16);
+      ctx.fillStyle = '#e0b0d0'; ctx.fillRect(x,y+16,32,2); ctx.fillRect(x,y+32,32,2); ctx.fillRect(x,y+48,32,2); ctx.fillRect(x,y+64,32,2);
+      // Books
+      const bookColors = ['#e84090','#b060d0','#00BCD4','#ff80b0','#FFD700','#4CAF50'];
+      for (let bk=0; bk<5; bk++) {
+        ctx.fillStyle = bookColors[bk%6];
+        ctx.fillRect(x+4+bk*5,y+4+bk*16,4,10);
+        ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(x+5+bk*5,y+6+bk*16,2,6);
+      }
+      break;
+    case T.POSTER:
+      ctx.fillStyle = '#f5d0e8'; ctx.fillRect(x,y,32,24);
+      ctx.fillStyle = '#fff0f8'; ctx.fillRect(x+2,y+2,28,20);
+      ctx.strokeStyle = '#e0b0d0'; ctx.strokeRect(x+2,y+2,28,20);
+      ctx.fillStyle = '#e84090'; ctx.font = '6px monospace'; ctx.fillText('✨', x+10, y+12);
+      ctx.fillStyle = '#b060d0'; ctx.fillText('AI', x+8, y+20);
+      break;
+    case T.COFFEE:
+      ctx.fillStyle = '#f0d0e0'; ctx.fillRect(x,y,32,16);
+      ctx.fillStyle = '#e8c0d8'; ctx.fillRect(x+8,y-4,16,10);
+      ctx.fillStyle = '#d090b0'; ctx.fillRect(x+10,y-2,12,3);
+      // Steam
+      ctx.fillStyle = 'rgba(200,100,160,0.3)';
+      for (let s=0; s<3; s++) ctx.fillRect(x+8+s*6,y-6-s*2,3,3);
+      // Cup handle
+      ctx.fillStyle = '#d090b0'; ctx.fillRect(x+6,y-2,2,5); ctx.fillRect(x+24,y-2,2,5);
+      break;
+    case T.WINDOW:
+      ctx.fillStyle = '#e8c0d8'; ctx.fillRect(x,y,16,4*16);
+      ctx.fillStyle = '#fff0f8'; ctx.fillRect(x+2,y+2,12,4*16-4);
+      ctx.strokeStyle = '#d0a0c0';
+      ctx.beginPath(); ctx.moveTo(x+8,y+2); ctx.lineTo(x+8,y+4*16-2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x+2,y+2*16); ctx.lineTo(x+14,y+2*16); ctx.stroke();
+      // Clouds outside
+      ctx.fillStyle = 'rgba(200,150,180,0.3)'; ctx.fillRect(x+3,y+8,8,3);
+      ctx.fillRect(x+4,y+18,6,3);
+      ctx.fillRect(x+5,y+28,7,3);
       break;
   }
 }
 
 function drawWhiteboard() {
-  const x = 22*TILE, y = 3*TILE;
-  ctx.font = '8px monospace';
+  const x = 23*16, y = 3*16;
   
-  ctx.fillStyle = '#78909c';
-  ctx.fillText('SPRINT 001', x + 8, y + 14);
+  // Title
+  ctx.fillStyle = '#e84090'; ctx.font = 'bold 9px monospace';
+  ctx.fillText('🌸 SPRINT 001', x+12, y+16);
   
-  ctx.fillStyle = '#4CAF50';
-  ctx.fillText('S.STUDIO AI OS', x + 8, y + 26);
+  ctx.fillStyle = '#4CAF50'; ctx.font = '7px monospace';
+  ctx.fillText('S.STUDIO AI OS', x+12, y+30);
   
-  ctx.fillStyle = '#546e7a';
-  ctx.font = '6px monospace';
-  ctx.fillText('▸ AI Agents Office', x + 8, y + 36);
-  ctx.fillText('▸ NextBite MVP', x + 8, y + 44);
+  // Todo list
+  ctx.fillStyle = '#d04080'; ctx.font = '6px monospace';
+  ctx.fillText('☐ AI Agents Office', x+12, y+44);
+  ctx.fillText('☐ NextBite MVP', x+12, y+54);
   
-  ctx.fillStyle = '#f44336';
-  ctx.fillText('▸ Axis Skin Launch', x + 54, y + 36);
+  ctx.fillStyle = '#b060d0';
+  ctx.fillText('☐ Axis Skin Launch', x+12, y+44+32);
+  ctx.fillText('☒ NeuralBit MVP', x+12, y+44+42);
   
-  ctx.fillStyle = '#FF9800';
-  ctx.fillText('▸ 🐶 Dog Blood S1', x + 54, y + 44);
+  // Progress bar
+  ctx.fillStyle = '#f0d0e8'; ctx.fillRect(x+12, y+3*16-6, 100, 6);
+  ctx.fillStyle = '#e84090'; ctx.fillRect(x+12, y+3*16-6, 42, 6);
+  ctx.fillStyle = '#d04080'; ctx.font = '5px monospace'; ctx.fillText('42%', x+52, y+3*16-1);
 }
 
-// ── Pixel Character Drawing ──────────────────────────────────
+// ── Character Drawing ────────────────────────────────────────
 
-function drawAgentSprite(x, y, agent, frame) {
+function drawAgent(x, y, agent, frame) {
   const { id, primary, secondary } = agent;
+  const img = charImages[id];
+  const FRAMES = 7;
   
-  // Use real sprite if available
-  if (charImages[id]) {
-    const img = charImages[id];
-    const sx = (frame % FRAMES_PER_ROW) * CHAR_FRAME_W;
-    const sy = 0; // direction down
-    const scale = 2;
-    ctx.drawImage(img, sx, sy, CHAR_FRAME_W, CHAR_FRAME_H,
-                  x - CHAR_FRAME_W/2, y - CHAR_FRAME_H, CHAR_FRAME_W * scale, CHAR_FRAME_H * scale);
+  if (img) {
+    const sx = (frame % FRAMES) * 16;
+    const sy = 0;
+    ctx.drawImage(img, sx, sy, 16, 32, x-16, y-64, 32, 64);
   } else {
-    // Draw generated pixel character
-    const size = 14;
-    const px = x - size;
-    const py = y - size * 2;
-    const bodyFrames = [
-      // Simple walking animation
-      [0,1,2,1],
-      [1,0,1,2],
-    ];
-    const bodyFrame = bodyFrames[frame % 2];
-    const bf = bodyFrame[0];
-    
-    // Head
-    ctx.fillStyle = '#f5d0a9';
-    ctx.fillRect(px+4, py, size-8, 5);
-    ctx.fillRect(px+3, py+1, size-6, 4);
-    
-    // Hair/hat
-    ctx.fillStyle = secondary;
-    ctx.fillRect(px+3, py-1, size-6, 3);
-    
-    // Body
-    ctx.fillStyle = primary;
-    ctx.fillRect(px+2, py+5, size-4, size-4);
-    
-    // Arms
-    ctx.fillStyle = '#f5d0a9';
-    const armOffset = bf === 0 ? 0 : (bf === 1 ? 1 : -1);
-    ctx.fillRect(px-1, py+6, 3, 6);
-    ctx.fillRect(px+size-2, py+6, 3, 6);
-    
-    // Legs
-    ctx.fillStyle = '#2c2c3a';
-    ctx.fillRect(px+3, py+size+1, 3, 3);
-    ctx.fillRect(px+8, py+size+1, 3, 3);
-    
-    // Eyes
-    ctx.fillStyle = '#000';
-    ctx.fillRect(px+5, py+2, 2, 1);
-    ctx.fillRect(px+9, py+2, 2, 1);
+    // Fallback: simple pixel character
+    ctx.fillStyle = '#f5d0a9'; ctx.fillRect(x-11,y-28,6,5); ctx.fillRect(x-12,y-27,8,4);
+    ctx.fillStyle = secondary; ctx.fillRect(x-12,y-29,8,3);
+    ctx.fillStyle = primary; ctx.fillRect(x-13,y-23,10,10);
+    ctx.fillStyle = '#f5d0a9'; ctx.fillRect(x-14,y-22,3,6); ctx.fillRect(x+2,y-22,3,6);
+    ctx.fillStyle = '#2c2c3a'; ctx.fillRect(x-10,y-13,3,3); ctx.fillRect(x-5,y-13,3,3);
+    ctx.fillStyle = '#000'; ctx.fillRect(x-8,y-26,2,1); ctx.fillRect(x-4,y-26,2,1);
   }
   
-  // Name tag
-  ctx.fillStyle = agent.primary;
-  ctx.font = 'bold 10px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText(agent.name, x, y + 10);
+  // Glow behind name
+  ctx.fillStyle = 'rgba(232,64,144,0.06)'; ctx.fillRect(x-24, y+8, 48, 14);
   
-  // Role label
-  ctx.fillStyle = '#666';
-  ctx.font = '7px monospace';
-  ctx.fillText(agent.role, x, y + 22);
+  // Name
+  ctx.fillStyle = primary; ctx.font = 'bold 10px monospace'; ctx.textAlign='center';
+  ctx.fillText(agent.name, x, y+12);
   
-  // Team badge
-  ctx.fillStyle = '#333';
-  ctx.font = '6px monospace';
-  ctx.fillText(agent.team, x, y + 30);
+  // Role
+  ctx.fillStyle = '#c080b0'; ctx.font='7px monospace'; ctx.fillText(agent.role, x, y+24);
   
-  // Status indicator dot
-  const dotColor = agent.status === 'idle' ? '#555' :
-                   agent.status === 'typing' ? '#4CAF50' :
-                   agent.status === 'reading' ? '#2196F3' :
-                   agent.status === 'reviewing' ? '#FF9800' :
-                   agent.status === 'running' ? '#FF5722' : '#4CAF50';
+  // Status indicator
+  const dotColor = agent.status === 'idle' ? '#d0a0c0' :
+                   agent.status === 'typing' ? '#e84090' :
+                   agent.status === 'reading' ? '#b060d0' :
+                   agent.status === 'reviewing' ? '#d47bff' :
+                   agent.status === 'running' ? '#ff4081' : '#d04080';
   ctx.fillStyle = dotColor;
-  ctx.beginPath();
-  ctx.arc(x + 18, y - 20, 3, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#333';
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  ctx.beginPath(); ctx.arc(x+22, y-18, 3, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#e0b0d0'; ctx.lineWidth=1; ctx.stroke();
+  
+  // Glow ring when active
+  if (agent.status !== 'idle') {
+    ctx.fillStyle = `rgba(232,64,144,0.06)`;
+    ctx.beginPath(); ctx.arc(x+22, y-18, 6, 0, Math.PI*2); ctx.fill();
+  }
   
   // Status text
-  ctx.fillStyle = '#aaa';
-  ctx.font = '7px monospace';
-  ctx.fillText(agent.statusText, x, y + 40);
+  ctx.fillStyle = '#d04080'; ctx.font='7px monospace'; ctx.fillText(agent.statusText, x, y+38);
 }
 
 // ── Render Loop ──────────────────────────────────────────────
@@ -413,46 +462,50 @@ let globalFrame = 0;
 
 function render() {
   globalFrame++;
+  const W = canvas.width, H = canvas.height;
   
-  ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff5f8'; ctx.fillRect(0, 0, W, H);
   
   // Draw map
-  for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c < COLS; c++)
-      drawTile(r, c, map[r][c]);
+  for (let r=0; r<ROWS; r++)
+    for (let c=0; c<COLS; c++)
+      drawTile(r, c);
   
-  // Draw whiteboard
+  // Whiteboard content
   drawWhiteboard();
   
-  // Draw agents
-  for (const desk of DESK_POSITIONS) {
-    const x = desk.col * TILE + TILE;
-    const y = desk.row * TILE + 4;
-    const agent = agents[desk.agent];
-    const animFrame = Math.floor(globalFrame / 5) % FRAMES_PER_ROW;
-    drawAgentSprite(x, y, agent, animFrame);
+  // Draw agents at desks
+  for (const d of DESK_POSITIONS) {
+    const x = d.col * 16 + 16;
+    const y = d.row * 16 + 4;
+    const agent = agents[d.agent];
+    const animFrame = Math.floor(globalFrame / 6) % 7;
+    drawAgent(x, y, agent, animFrame);
   }
   
-  // Draw Sammi's CEO desk
-  const ceoX = 42 * TILE + TILE;
-  const ceoY = 4 * TILE;
-  ctx.fillStyle = '#7c3aed';
-  ctx.font = 'bold 12px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('👩🏻 Sammi', ceoX, ceoY + TILE*2);
-  ctx.fillStyle = '#555';
-  ctx.font = '8px monospace';
-  ctx.fillText('Founder & CEO', ceoX, ceoY + TILE*2 + 12);
-  // CEO desk glow
-  ctx.fillStyle = 'rgba(124, 58, 237, 0.05)';
-  ctx.fillRect(41*TILE, 3*TILE, 4*TILE, 2*TILE);
+  // ── CEO Corner (Sammi) ────
+  const ceoX = 48*16+16, ceoY = 4*16;
   
-  // Floor label
-  ctx.fillStyle = '#444';
-  ctx.font = '7px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('🏢 S.STUDIO AI Software Studio · Engineering Floor · Sprint 001', canvas.width/2, canvas.height - 8);
+  // CEO desk platform
+  ctx.fillStyle = 'rgba(200,100,200,0.08)'; 
+  ctx.fillRect(46*16, 3*16, 5*16, 3*16);
+  ctx.strokeStyle = 'rgba(200,100,200,0.2)'; ctx.lineWidth=1;
+  ctx.strokeRect(46*16, 3*16, 5*16, 3*16);
+  
+  // Tiny crown emoji
+  ctx.font = '16px monospace'; ctx.textAlign='center';
+  ctx.fillText('👑', ceoX, ceoY+8);
+  
+  ctx.fillStyle = '#a050c0'; ctx.font='bold 11px monospace';
+  ctx.fillText('👩🏻 Sammi', ceoX, ceoY+28);
+  ctx.fillStyle = '#c080b0'; ctx.font='8px monospace';
+  ctx.fillText('Founder & CEO', ceoX, ceoY+40);
+  ctx.fillStyle = '#d0a0c0'; ctx.font='7px monospace';
+  ctx.fillText('Supreme Authority', ceoX, ceoY+52);
+  
+  // ── Floor label ────
+  ctx.fillStyle = '#d0a0c0'; ctx.font='7px monospace'; ctx.textAlign='center';
+  ctx.fillText('🌸 S.STUDIO Light Floor · Sprint 001 · Startup Mode', W/2, H-6);
   
   requestAnimationFrame(render);
 }
@@ -472,27 +525,24 @@ function createControls() {
     panel.appendChild(title);
     
     const role = document.createElement('div');
-    role.className = 'role';
-    role.textContent = config.role;
+    role.className = 'role'; role.textContent = config.role;
     panel.appendChild(role);
     
-    const statusText = document.createElement('div');
-    statusText.className = 'status-text';
-    statusText.id = `status-${config.id}`;
-    statusText.textContent = 'Standing by';
-    panel.appendChild(statusText);
+    const st = document.createElement('div');
+    st.className = 'status-text'; st.id = `status-${config.id}`;
+    st.textContent = '✨ Standing by';
+    panel.appendChild(st);
     
     const btns = document.createElement('div');
     btns.className = 'status-btns';
     
+    const labels = { idle:'💤', typing:'💻', reading:'📖', reviewing:'🔍', waiting:'⏳', done:'✅' };
     for (const s of statuses) {
       const btn = document.createElement('button');
-      btn.textContent = s === 'idle' ? '◉ Idle' : s === 'typing' ? '⌨ Type' : s === 'reading' ? '📖 Read' : s === 'reviewing' ? '🔍 Review' : s === 'waiting' ? '⏳ Wait' : '✅ Done';
-      btn.dataset.status = s;
+      btn.textContent = `${labels[s]} ${s}`;
       btn.onclick = () => updateAgent(config.id, s);
       btns.appendChild(btn);
     }
-    
     panel.appendChild(btns);
     container.appendChild(panel);
   }
@@ -502,17 +552,15 @@ async function updateAgent(id, status) {
   try {
     const res = await fetch(`/api/agents/${id}/status`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({status, statusText: STATUS_MAP[status]}),
     });
     const agent = await res.json();
     agents[id].status = agent.status;
     agents[id].statusText = agent.statusText;
     const el = document.getElementById(`status-${id}`);
     if (el) el.textContent = agent.statusText;
-  } catch (e) {
-    console.error('Failed to update:', e);
-  }
+  } catch(e) {}
 }
 
 // ── Poll ─────────────────────────────────────────────────────
@@ -521,27 +569,35 @@ async function pollStates() {
   try {
     const res = await fetch('/api/agents');
     const data = await res.json();
-    for (const agent of data) {
-      if (agents[agent.id]) {
-        agents[agent.id].status = agent.status;
-        agents[agent.id].statusText = agent.statusText;
-        const el = document.getElementById(`status-${agent.id}`);
-        if (el) el.textContent = agent.statusText;
+    for (const a of data) {
+      if (agents[a.id]) {
+        agents[a.id].status = a.status;
+        agents[a.id].statusText = a.statusText;
+        const el = document.getElementById(`status-${a.id}`);
+        if (el) el.textContent = a.statusText;
       }
     }
-  } catch (_) {}
+  } catch(_) {}
 }
+
+setInterval(pollStates, 2000);
 
 // ── Init ─────────────────────────────────────────────────────
 
 async function init() {
+  console.log('🌸 Loading S.STUDIO Pink Office...');
   await loadSprites();
   createControls();
   render();
   pollStates();
+  // Auto-update to show working state
+  setTimeout(() => {
+    updateAgent('hermes', 'reading');
+    updateAgent('openclaw', 'typing');
+    setTimeout(() => updateAgent('chatgpt', 'reviewing'), 1000);
+  }, 2000);
 }
 
-setInterval(pollStates, 2000);
 init();
 </script>
 </body>
