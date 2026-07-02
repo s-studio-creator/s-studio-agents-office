@@ -1,0 +1,18 @@
+name: COO Trigger
+on:
+  issues:
+    types: [opened, labeled, unlabeled, assigned]
+  pull_request:
+    types: [opened, closed, review_requested]
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes as backup
+
+jobs:
+  coo-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger COO Webhook
+        run: |
+          curl -s -X POST "${{ secrets.COO_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"event": "${{ github.event_name }}", "repo": "${{ github.repository }}"}'

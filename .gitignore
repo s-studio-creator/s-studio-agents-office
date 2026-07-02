@@ -6,3 +6,6 @@ recolor-sprites.mjs
 render-office.mjs
 office-render.png
 screenshot*.png
+
+# COO service
+coo/node_modules/
