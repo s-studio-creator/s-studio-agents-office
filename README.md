@@ -22,6 +22,15 @@ Pixel art virtual office for S.STUDIO's 12-person AI software studio.
 | 🎨 Claude | Design Director | Design | Pink |
 | 🔍 Gemini | Research Analyst | Research | Gold |
 
+## Deploy n8n COO (One Click)
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/n8n?referralCode=sstudio)
+
+1. Click the button above
+2. Connect GitHub
+3. Deploy automatically 🚀
+4. Import workflows from `.ai/workflows/n8n-*.json`
+
 ## Quick Start
 
 ```sh

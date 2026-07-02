@@ -7,14 +7,46 @@
  */
 
 import fetch from 'node-fetch';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, appendFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { decide } from './decision.js';
 import { syncOffice } from './sync-office.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const DISPATCH_LOG = join(__dirname, 'dispatch.log');
+const OFFICE_URL = process.env.OFFICE_URL || 'http://localhost:3100';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const OWNER = process.env.GITHUB_OWNER || 's-studio-creator';
 const REPO = process.env.GITHUB_REPO || 's-studio-agents-office';
-const POLL_INTERVAL = process.env.POLL_INTERVAL || 60_000; // 1 minute
-const OFFICE_URL = process.env.OFFICE_URL || 'http://localhost:3100';
+const POLL_INTERVAL = parseInt(process.env.POLL_INTERVAL) || 60_000; // 1 minute
+
+function logDispatch(agent, issue, action) {
+  try {
+    const entry = {
+      dispatchId: `d${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      agent,
+      issue: { number: issue.number, title: issue.title, url: issue.html_url },
+      action,
+      status: 'pending',
+    };
+    appendFileSync(DISPATCH_LOG, JSON.stringify(entry) + '\n');
+    console.log(`[COO] 📤 Dispatched ${agent} for #${issue.number}: ${action}`);
+  } catch (e) {
+    console.error('[COO] Dispatch log failed:', e.message);
+  }
+}
+
+function appendFileSync(path, data) {
+  try {
+    const existing = existsSync(path) ? readFileSync(path, 'utf-8') : '';
+    writeFileSync(path, existing + data);
+  } catch (e) {
+    console.error('[COO] File write failed:', e.message);
+  }
+}
 
 const GITHUB_API = `https://api.github.com/repos/${OWNER}/${REPO}`;
 
@@ -141,6 +173,7 @@ async function cycle() {
       case 'assign_agent':
         await assignIssue(issue, action.agent);
         await updateLabels(issue, action.newLabel || 'status: in-progress');
+        logDispatch(action.agent, issue, action.action);
         
         // Notify office with appropriate state per agent
         const stateMap = {

@@ -1,5 +1,5 @@
 import express from 'express';
-import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { readFileSync, existsSync, mkdirSync, writeFileSync, appendFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -145,6 +145,59 @@ app.post('/api/agents/batch', (req, res) => {
   res.json({ ok: true });
 });
 
+// ── Dispatch Queue ─────────────────────────────────────────
+// The COO writes dispatch tasks here. OpenClaw reads them.
+
+const DISPATCH_LOG = join(__dirname, '..', 'coo', 'dispatch.log');
+
+app.get('/api/dispatch/pending', (req, res) => {
+  try {
+    if (!existsSync(DISPATCH_LOG)) return res.json([]);
+    const data = readFileSync(DISPATCH_LOG, 'utf-8').trim();
+    const lines = data ? data.split('\n').filter(l => l) : [];
+    const pending = lines
+      .map(l => { try { return JSON.parse(l); } catch { return null; } })
+      .filter(l => l && l.status === 'pending');
+    res.json(pending);
+  } catch (e) {
+    res.json([]);
+  }
+});
+
+app.post('/api/dispatch/acknowledge', (req, res) => {
+  // Mark a dispatch as acknowledged (OpenClaw picked it up)
+  const { dispatchId } = req.body;
+  if (!dispatchId) return res.status(400).json({ error: 'dispatchId required' });
+  
+  try {
+    if (!existsSync(DISPATCH_LOG)) return res.json({ ok: false });
+    const data = readFileSync(DISPATCH_LOG, 'utf-8');
+    const lines = data.split('\n');
+    const updated = lines.map(l => {
+      try {
+        const d = JSON.parse(l);
+        if (d.dispatchId === dispatchId) d.status = 'acknowledged';
+        return JSON.stringify(d);
+      } catch { return l; }
+    }).join('\n');
+    writeFileSync(DISPATCH_LOG, updated);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/dispatch/all', (req, res) => {
+  try {
+    if (!existsSync(DISPATCH_LOG)) return res.json([]);
+    const data = readFileSync(DISPATCH_LOG, 'utf-8').trim();
+    const lines = data ? data.split('\n').filter(l => l) : [];
+    res.json(lines.map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean));
+  } catch (e) {
+    res.json([]);
+  }
+});
+
 // ── Character sprites API ───────────────────────────────────
 
 app.get('/api/sprites/:id', (req, res) => {
@@ -157,6 +210,12 @@ app.get('/api/sprites/:id', (req, res) => {
 });
 
 // ── Start ───────────────────────────────────────────────────
+
+// Ensure dispatch log exists
+mkdirSync(join(__dirname, '..', 'coo'), { recursive: true });
+if (!existsSync(DISPATCH_LOG)) {
+  writeFileSync(DISPATCH_LOG, '');
+}
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  🏢 S.STUDIO Agent Office (12-Person Studio)`);

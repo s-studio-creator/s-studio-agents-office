@@ -1,0 +1,30 @@
+{
+  "name": "sstudio-n8n",
+  "description": "S.STUDIO AI COO — n8n workflow automation",
+  "template": "https://github.com/railwayapp-templates/n8n",
+  "services": [
+    {
+      "name": "n8n",
+      "image": "n8nio/n8n:latest",
+      "port": 5678,
+      "volumes": [
+        {
+          "mountPath": "/home/node/.n8n",
+          "name": "n8n-data"
+        }
+      ],
+      "env": {
+        "N8N_ENCRYPTION_KEY": {
+          "generator": "cryptoRandomBytes",
+          "length": 32
+        },
+        "N8N_HOST": "${RAILWAY_PUBLIC_DOMAIN}",
+        "WEBHOOK_URL": "https://${RAILWAY_PUBLIC_DOMAIN}",
+        "N8N_PROTOCOL": "https",
+        "N8N_PORT": "5678",
+        "EXECUTIONS_DATA_PRUNE": "true",
+        "EXECUTIONS_DATA_MAX_AGE": "168"
+      }
+    }
+  ]
+}
