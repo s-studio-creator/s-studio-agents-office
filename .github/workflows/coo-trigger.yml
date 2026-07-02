@@ -4,15 +4,20 @@ on:
     types: [opened, labeled, unlabeled, assigned]
   pull_request:
     types: [opened, closed, review_requested]
-  schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes as backup
 
 jobs:
   coo-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger COO Webhook
+      - name: Notify COO Service
+        env:
+          COO_WEBHOOK_URL: ${{ secrets.COO_WEBHOOK_URL }}
         run: |
-          curl -s -X POST "${{ secrets.COO_WEBHOOK_URL }}" \
+          if [ -z "$COO_WEBHOOK_URL" ]; then
+            echo "ℹ️ No COO_WEBHOOK_URL set — local COO polls GitHub every 60s anyway"
+            echo "   Set this secret to: https://sstudio.loca.lt/api/webhook/coo"
+            exit 0
+          fi
+          curl -s -X POST "$COO_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
-            -d '{"event": "${{ github.event_name }}", "repo": "${{ github.repository }}"}'
+            -d '{"event": "${{ github.event_name }}", "repo": "${{ github.repository }}", "issue": ${{ toJson(github.event.issue) }}}'
