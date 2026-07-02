@@ -54,15 +54,24 @@ async function getPRs() {
 }
 
 async function assignIssue(issue, agent) {
+  // Agents aren't real GitHub users, so we can't use the assignees API.
+  // Instead we comment on the issue to tag the agent.
   try {
-    await fetch(`${GITHUB_API}/issues/${issue.number}/assignees`, {
+    await fetch(`${GITHUB_API}/issues/${issue.number}/comments`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ assignees: [agent] }),
+      body: JSON.stringify({ body: `## 🤖 COO Assignment
+
+**Assigned to:** ${agent}
+**Status:** status: in-progress
+**Action:** Start working on this issue.
+
+---
+*Auto-assigned by COO Service*` }),
     });
-    console.log(`[COO] Assigned #${issue.number} to ${agent}`);
+    console.log(`[COO] Commented assignment #${issue.number} → ${agent}`);
   } catch (e) {
-    console.error(`[COO] Assign failed:`, e.message);
+    console.error(`[COO] Assign comment failed:`, e.message);
   }
 }
 
