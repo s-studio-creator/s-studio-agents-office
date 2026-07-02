@@ -1,0 +1,71 @@
+{
+  "name": "COO: PR Opened → Request QA Review",
+  "nodes": [
+    {
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "coo/pr-opened",
+        "options": {}
+      },
+      "webhookId": "coo-pr-gh",
+      "position": [0, 300]
+    },
+    {
+      "name": "Check PR Status",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {"value1": "={{$json.body.action}}", "operation": "equal", "value2": "opened"}
+          ]
+        }
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Update Label to Review",
+      "type": "n8n-nodes-base.github",
+      "parameters": {
+        "repository": "={{$json.body.repository.full_name}}",
+        "issueNumber": "={{$json.body.pull_request.number}}",
+        "operation": "addLabels",
+        "labels": "['status: review']"
+      },
+      "position": [500, 250]
+    },
+    {
+      "name": "Notify Office: Reviewing",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "={{$env.OFFICE_URL}}/api/agents/batch",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "chatgpt", "fieldValue": "{\"status\":\"reviewing\"}"}
+          ]
+        }
+      },
+      "position": [500, 400]
+    },
+    {
+      "name": "Telegram: PR Ready",
+      "type": "n8n-nodes-base.telegram",
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "=🔍 PR #{{$json.body.pull_request.number}}: {{$json.body.pull_request.title}}\n\nChatGPT is reviewing\n\n{{$json.body.pull_request.html_url}}"
+      },
+      "position": [750, 300]
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": {"main": [[{"node": "Check PR Status", "type": "main"}]]},
+    "Check PR Status": {
+      "main": [[{"node": "Update Label to Review", "type": "main"}], []]
+    },
+    "Update Label to Review": {
+      "main": [[{"node": "Telegram: PR Ready", "type": "main"}, {"node": "Notify Office: Reviewing", "type": "main"}]]
+    }
+  }
+}

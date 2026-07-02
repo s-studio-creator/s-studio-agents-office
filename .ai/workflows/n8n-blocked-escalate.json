@@ -1,0 +1,55 @@
+{
+  "name": "COO: Check Blocked Issues (Daily)",
+  "nodes": [
+    {
+      "name": "Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "parameters": {
+        "rule": {
+          "interval": [{"field": "hours", "hoursInterval": 6}]
+        }
+      },
+      "position": [0, 300]
+    },
+    {
+      "name": "Fetch Blocked Issues",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "=https://api.github.com/repos/s-studio-creator/s-studio-agents-office/issues?labels=status:+blocked&state=open",
+        "method": "GET",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "fieldValue": "=token {{$env.GITHUB_TOKEN}}"},
+            {"name": "Accept", "fieldValue": "application/vnd.github.v3+json"}
+          ]
+        }
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Filter Old Blocked",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst now = Date.now();\nconst 24h = 24 * 60 * 60 * 1000;\nreturn items.filter(item => {\n  const created = new Date(item.json.created_at).getTime();\n  return (now - created) > 24h;\n});"
+      },
+      "position": [500, 300]
+    },
+    {
+      "name": "Telegram Escalate",
+      "type": "n8n-nodes-base.telegram",
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "=🚨 Blocked >24h: {{$json.title}}\n#{{$json.number}} {{$json.html_url}}\n\nNeeds your attention, Sammi 👩🏻"
+      },
+      "position": [750, 300]
+    }
+  ],
+  "connections": {
+    "Schedule": {"main": [[{"node": "Fetch Blocked Issues", "type": "main"}]]},
+    "Fetch Blocked Issues": {"main": [[{"node": "Filter Old Blocked", "type": "main"}]]},
+    "Filter Old Blocked": {"main": [[{"node": "Telegram Escalate", "type": "main"}]]}
+  }
+}

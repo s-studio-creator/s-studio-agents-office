@@ -1,0 +1,106 @@
+{
+  "name": "COO: Issue Opened → Assign Agent",
+  "nodes": [
+    {
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "coo/issue-opened",
+        "options": {}
+      },
+      "webhookId": "coo-issue-gh",
+      "position": [0, 300]
+    },
+    {
+      "name": "Check Labels",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.body.issue.labels}}",
+              "operation": "contains",
+              "value2": "status: ready"
+            }
+          ]
+        }
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Find Agent Label",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "const labels = $input.first().json.body.issue.labels.map(l => l.name);\nconst agentLabels = labels.filter(l => l.startsWith('agent:'));\nconst agent = agentLabels[0]?.replace('agent:', '').trim() || 'openclaw';\nconst labelMap = {\n  'hermes': 'in-progress',\n  'openclaw': 'in-progress'\n};\nreturn { agent, newStatus: labelMap[agent] || 'in-progress' };"
+      },
+      "position": [500, 250]
+    },
+    {
+      "name": "Update GitHub Label",
+      "type": "n8n-nodes-base.github",
+      "parameters": {
+        "repository": "={{$json.body.repository.full_name}}",
+        "issueNumber": "={{$json.body.issue.number}}",
+        "operation": "addLabels",
+        "labels": "={{['status: '+$node['Find Agent Label'].json.newStatus]}}"
+      },
+      "position": [750, 200]
+    },
+    {
+      "name": "Comment Assignment",
+      "type": "n8n-nodes-base.github",
+      "parameters": {
+        "repository": "={{$json.body.repository.full_name}}",
+        "issueNumber": "={{$json.body.issue.number}}",
+        "operation": "createComment",
+        "body": "=🤖 COO Assigned: {{$node['Find Agent Label'].json.agent}}\nStatus: {{$node['Find Agent Label'].json.newStatus}}"
+      },
+      "position": [750, 300]
+    },
+    {
+      "name": "Notify Office (Webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "={{$env.OFFICE_URL || 'https://sstudio.loca.lt'}}/api/agents/{{$node['Find Agent Label'].json.agent}}/status",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "status", "fieldValue": "={{$node['Find Agent Label'].json.newStatus === 'in-progress' ? 'typing' : 'idle'}}"}
+          ]
+        }
+      },
+      "position": [750, 400]
+    },
+    {
+      "name": "Telegram Notify",
+      "type": "n8n-nodes-base.telegram",
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "=🟢 {{$node['Find Agent Label'].json.agent}} started: {{$json.body.issue.title}}\n\n#{{$json.body.issue.number}} {{$json.body.issue.html_url}}"
+      },
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": {"main": [[{"node": "Check Labels", "type": "main"}]]},
+    "Check Labels": {
+      "main": [
+        [{"node": "Find Agent Label", "type": "main"}],
+        []
+      ]
+    },
+    "Find Agent Label": {
+      "main": [[{"node": "Update GitHub Label", "type": "main"}]]
+    },
+    "Update GitHub Label": {
+      "main": [[{"node": "Comment Assignment", "type": "main"}, {"node": "Notify Office (Webhook)", "type": "main"}]]
+    },
+    "Comment Assignment": {
+      "main": [[{"node": "Telegram Notify", "type": "main"}]]
+    },
+    "Notify Office (Webhook)": {
+      "main": [[{"node": "Telegram Notify", "type": "main"}]]
+    }
+  }
+}
