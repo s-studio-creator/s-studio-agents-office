@@ -1,0 +1,85 @@
+{
+  "name": "COO: Infrastructure Task → Codex → Handoff to OpenClaw",
+  "nodes": [
+    {
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {"path": "coo/infra", "options": {}},
+      "webhookId": "coo-infra",
+      "position": [0, 300]
+    },
+    {
+      "name": "Check Infra Label",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {"value1": "={{JSON.stringify($json.body.issue.labels.map(l => l.name))}}", "operation": "contains", "value2": "agent: codex"}
+          ]
+        }
+      },
+      "position": [250, 300]
+    },
+    {
+      "name": "Assign Codex",
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": "return {\n  agent: 'codex',\n  issueNumber: $json.body.issue.number,\n  repo: $json.body.repository.full_name,\n  title: $json.body.issue.title\n};"
+      },
+      "position": [500, 250]
+    },
+    {
+      "name": "GitHub: Label In-Progress",
+      "type": "n8n-nodes-base.github",
+      "parameters": {
+        "repository": "={{$json.body.repository.full_name}}",
+        "issueNumber": "={{$json.body.issue.number}}",
+        "operation": "addLabels",
+        "labels": "['status: in-progress']"
+      },
+      "position": [750, 200]
+    },
+    {
+      "name": "Comment: Codex Working",
+      "type": "n8n-nodes-base.github",
+      "parameters": {
+        "repository": "={{$json.body.repository.full_name}}",
+        "issueNumber": "={{$json.body.issue.number}}",
+        "operation": "createComment",
+        "body": "=🏗 COO: Assigning Codex (Staff Engineer)\n\nSetting up infrastructure...\n\nExpected output:\n- CI/CD pipeline\n- Repository structure\n- Deployment config\n\nWhen done → label `status: infra-ready` → OpenClaw takes over"
+      },
+      "position": [750, 300]
+    },
+    {
+      "name": "Notify Office: Codex Running",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "={{$env.OFFICE_URL || 'https://sstudio.loca.lt'}}/api/agents/codex/status",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [{"name": "status", "fieldValue": "running"}]
+        }
+      },
+      "position": [750, 400]
+    },
+    {
+      "name": "Telegram: Codex Working",
+      "type": "n8n-nodes-base.telegram",
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "=🏗 Codex is working on: {{$json.body.issue.title}}\n\nSetting up infrastructure...\n\n#{{$json.body.issue.number}} {{$json.body.issue.html_url}}"
+      },
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": {"main": [[{"node": "Check Infra Label", "type": "main"}]]},
+    "Check Infra Label": {"main": [[{"node": "Assign Codex", "type": "main"}], []]},
+    "Assign Codex": {"main": [[{"node": "GitHub: Label In-Progress", "type": "main"}]]},
+    "GitHub: Label In-Progress": {
+      "main": [[{"node": "Comment: Codex Working", "type": "main"}, {"node": "Notify Office: Codex Running", "type": "main"}]]
+    },
+    "Comment: Codex Working": {"main": [[{"node": "Telegram: Codex Working", "type": "main"}]]}
+  }
+}

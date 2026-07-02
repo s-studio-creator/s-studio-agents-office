@@ -140,29 +140,91 @@ async function cycle() {
     switch (action.action) {
       case 'assign_agent':
         await assignIssue(issue, action.agent);
-        await updateLabels(issue, 'status: in-progress');
-        await notifyOffice(action.agent, 'typing');
+        await updateLabels(issue, action.newLabel || 'status: in-progress');
+        
+        // Notify office with appropriate state per agent
+        const stateMap = {
+          'codex': 'running',
+          'claude': 'reading',
+          'gemini': 'reading',
+          'hermes': 'typing',
+          'openclaw': 'typing',
+        };
+        await notifyOffice(action.agent, stateMap[action.agent] || 'typing');
         break;
         
       case 'request_review':
-        await updateLabels(issue, 'status: review');
+        await updateLabels(issue, action.newLabel || 'status: review');
         await notifyOffice('chatgpt', 'reviewing');
         break;
         
+      case 'handoff':
+        // Comment on the issue about handoff
+        await fetch(`${GITHUB_API}/issues/${issue.number}/comments`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ body: `## 🔄 COO Handoff
+
+**${action.message}**
+
+---
+*Auto-dispatched by COO Service*` }),
+        });
+        console.log(`[COO] 🔄 Handoff: ${action.message}`);
+        
+        // Add agent label for new agent + reset status to ready
+        if (action.newAgent) {
+          const currentLabels = issue.labels.map(l => l.name);
+          const filtered = currentLabels.filter(l => !l.startsWith('agent:') && !l.startsWith('status:'));
+          filtered.push(`agent: ${action.newAgent}`);
+          filtered.push(action.newLabel || 'status: ready');
+          await fetch(`${GITHUB_API}/issues/${issue.number}/labels`, {
+            method: 'PUT', headers,
+            body: JSON.stringify({ labels: filtered }),
+          });
+        }
+        
+        await notifyOffice(action.from, 'idle');
+        await notifyOffice(action.to, 'typing');
+        break;
+        
       case 'close_issue':
-        await updateLabels(issue, 'status: done');
-        // Close the issue
+        await updateLabels(issue, action.newLabel || 'status: done');
         await fetch(`${GITHUB_API}/issues/${issue.number}`, {
           method: 'PATCH',
           headers,
           body: JSON.stringify({ state: 'closed' }),
         });
+        await notifyOffice('openclaw', 'idle');
+        console.log(`[COO] ✅ Closed #${issue.number}`);
         break;
         
       case 'escalate':
         console.log(`[COO] 📢 ESCALATION: ${action.message}`);
-        // TODO: Send to Sammi via Telegram/Slack
+        // Post escalation as issue comment
+        await fetch(`${GITHUB_API}/issues/${issue.number}/comments`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ body: `## 🚨 COO Escalation
+
+${action.message}
+
+**To:** ${action.to}
+
+---
+*Auto-escalated by COO Service*` }),
+        });
         await notifyOffice('hermes', 'waiting');
+        break;
+        
+      case 'notify':
+        console.log(`[COO] 📬 Notify: ${action.message}`);
+        await fetch(`${GITHUB_API}/issues/${issue.number}/comments`, {
+          method: 'POST', headers,
+          body: JSON.stringify({ body: `## 📬 COO Notification
+
+${action.message}` }),
+        });
         break;
     }
   }
